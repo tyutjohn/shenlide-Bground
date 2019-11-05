@@ -1,7 +1,7 @@
 /*
  * @Author: johnwang
  * @since: 2019-11-02 00:29:39
- * @lastTime: 2019-11-04 16:07:33
+ * @lastTime: 2019-11-05 21:52:20
  * @LastAuthor: Do not edit
  * @Github: https://github.com/tyutjohn
  */
@@ -12,6 +12,7 @@ import Home from '../views/Home'
 import Calendar from '../components/Calendar'
 import Editor from '../components/Editor'
 import Adminuser from '../components/Adminuser'
+import Article from '../components/Article'
 
 Vue.use(VueRouter)
 
@@ -32,6 +33,10 @@ const routes = [{
         path:'/Adminuser',
         name:'adminuser',
         component:Adminuser
+      },{
+        path:'/Article',
+        name:'article',
+        component:Article
       }
     ]
   },

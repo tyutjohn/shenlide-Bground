@@ -1,7 +1,7 @@
 <!--
  * @Author: johnwang
  * @since: 2019-11-02 19:37:58
- * @lastTime: 2019-11-04 23:04:22
+ * @lastTime: 2019-11-05 21:53:02
  * @LastAuthor: Do not edit
  * @Github: https://github.com/tyutjohn
  -->
@@ -163,6 +163,9 @@
             //动态加载工作区组件
             componentMount(key) {
                 switch (key) {
+                    case '1-1':
+                        this.$router.push('/Article');
+                        break;
                     case '1-2':
                         this.$router.push('/Editor');
                         break;

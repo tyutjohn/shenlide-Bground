@@ -1,14 +1,14 @@
 /*
  * @Author: johnwang
  * @since: 2019-11-02 00:29:39
- * @lastTime: 2019-11-02 15:24:42
+ * @lastTime: 2019-11-06 00:32:58
  * @LastAuthor: Do not edit
  * @Github: https://github.com/tyutjohn
  */
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
-import store from './store'
+import store from './store/index'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import axios from 'axios'
