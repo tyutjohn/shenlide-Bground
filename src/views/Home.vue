@@ -1,7 +1,7 @@
 <!--
  * @Author: johnwang
  * @since: 2019-11-02 19:37:58
- * @lastTime: 2019-11-05 21:53:02
+ * @lastTime: 2019-11-06 08:43:24
  * @LastAuthor: Do not edit
  * @Github: https://github.com/tyutjohn
  -->
@@ -168,6 +168,9 @@
                         break;
                     case '1-2':
                         this.$router.push('/Editor');
+                        break;
+                    case '2':
+                        this.$router.push('/Client');
                         break;
                     case '3-1':
                         this.$router.push('/Adminuser');
