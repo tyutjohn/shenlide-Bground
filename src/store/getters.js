@@ -1,7 +1,7 @@
 /*
  * @Author: johnwang
  * @since: 2019-11-02 16:21:40
- * @lastTime: 2019-11-06 00:05:58
+ * @lastTime: 2019-11-06 10:00:54
  * @LastAuthor: Do not edit
  * @Github: https://github.com/tyutjohn
  */
@@ -23,6 +23,9 @@ const getters={
     },
     getContent(state){
         return state.article.content
+    },
+    getId(state){
+        return state.article.id
     }
 }
 

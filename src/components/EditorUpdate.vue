@@ -24,7 +24,8 @@
         <el-option label="申立德动态" value="2"></el-option>
         <el-option label="学术交流" value="3"></el-option>
       </el-select>
-      <el-input size="medium" placeholder="请输入发布者" suffix-icon="el-icon-user" v-model="article.name" style="width:200px">
+      <el-input size="medium" placeholder="请输入发布者" suffix-icon="el-icon-user" v-model="article.name"
+        style="width:200px">
       </el-input>
       <el-button type="warning" @click="PublishArticle()">确认修改</el-button>
     </div>
@@ -75,11 +76,12 @@
     data() {
       return {
         editor: '',
-        info_: '',  //内容
+        info_: '', //内容
         article: {
           title: '', //标题
           articleClass: '', //类别
           name: '', //发布者
+          id: ''    //文章id
         }
       };
     },
@@ -88,26 +90,27 @@
       event: 'change'
     },
     props: {
-        value: {
-          type: String,
-          default: ''
-        },
-        isClear: {
-          type: Boolean,
-          default: false
-        }
+      value: {
+        type: String,
+        default: ''
       },
+      isClear: {
+        type: Boolean,
+        default: false
+      }
+    },
 
     components: {},
 
     computed: {},
 
-    beforeMount() {},
+    beforeMount() {
+      this.initArticle()
+    },
 
     mounted() {
       this.seteditor()
-      this.editor.txt.html(this.value)
-      this.initArticle()
+      this.editor.txt.html(this.info_)
     },
 
     methods: {
@@ -147,32 +150,30 @@
       },
       //修改文章
       PublishArticle() {
-        this.axios.put('/api/news', {
+        var id = this.article.id;
+        this.axios.put('/api/news/' + id, {
           title: this.article.title,
           class: this.article.articleClass,
           name: this.article.name,
           content: this.info_
         }).then(res => {
-          if (res.data.status == '200') {
+          if (res.state == '200') {
             this.$message({
               message: '文章修改成功',
               type: 'success'
             });
-            this.article.title = '';
-            this.article.articleClass = '';
-            this.article.name = '';
-            this.info_ = '';
           } else {
             this.$message.error('文章修改失败');
           }
         })
       },
       //获取vuex数据
-      initArticle(){
-        this.article.name=this.$store.state.article.name;
-        this.article.title=this.$store.state.article.title;
-        this.article.articleClass=this.$store.state.article.class;
-        this.info_=this.$store.state.article.content;
+      initArticle() {
+        this.article.name = this.$store.state.article.name;
+        this.article.title = this.$store.state.article.title;
+        this.article.articleClass = this.$store.state.article.class;
+        this.info_ = this.$store.state.article.content;
+        this.article.id=this.$store.state.article.id;
       }
     },
 
@@ -193,6 +194,7 @@
       info_() {
         var html = this.info_;
         document.querySelector('#content').innerHTML = html;
+        this.content=this.info_;
       }
     }
 

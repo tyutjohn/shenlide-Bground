@@ -1,7 +1,7 @@
 <!--
  * @Author: johnwang
  * @since: 2019-11-02 19:37:58
- * @lastTime: 2019-11-06 08:43:24
+ * @lastTime: 2019-11-06 10:37:01
  * @LastAuthor: Do not edit
  * @Github: https://github.com/tyutjohn
  -->
@@ -139,7 +139,7 @@
         beforeMount() {},
 
         mounted() {
-            this.getUser();
+            // this.getUser();
         },
 
         methods: {

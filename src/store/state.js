@@ -1,7 +1,7 @@
 /*
  * @Author: johnwang
  * @since: 2019-11-06 00:24:04
- * @lastTime: 2019-11-06 00:24:31
+ * @lastTime: 2019-11-06 09:59:25
  * @LastAuthor: Do not edit
  * @Github: https://github.com/tyutjohn
  */
@@ -13,7 +13,8 @@ const state = {
         title: '',
         class: '',
         name: '',
-        content: ''
+        content: '',
+        id:''
     }
 }
 

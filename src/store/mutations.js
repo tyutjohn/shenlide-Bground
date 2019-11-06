@@ -1,7 +1,7 @@
 /*
  * @Author: johnwang
  * @since: 2019-11-02 16:21:52
- * @lastTime: 2019-11-06 00:03:05
+ * @lastTime: 2019-11-06 10:00:37
  * @LastAuthor: Do not edit
  * @Github: https://github.com/tyutjohn
  */
@@ -29,6 +29,9 @@ const mutations={
     },
     contentStatus(state,content){
         state.article.content=content
+    },
+    idStatus(state,id){
+        state.article.id=id
     }
 }
 

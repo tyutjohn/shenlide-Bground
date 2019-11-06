@@ -1,7 +1,7 @@
 <!--
  * @Author: johnwang
  * @since: 2019-11-05 21:49:54
- * @lastTime: 2019-11-06 01:07:04
+ * @lastTime: 2019-11-06 10:47:23
  * @LastAuthor: Do not edit
  * @Github: https://github.com/tyutjohn
  -->
@@ -41,7 +41,7 @@
                 </el-table-column>
             </el-table>
             <el-dialog title="修改文章" :visible.sync="dialogArticle" width="90%">
-                <Editor :key="menuKey"/>
+                <Editor :key="menuKey" />
             </el-dialog>
             <div style="margin-top:10px">
                 <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
@@ -92,25 +92,29 @@
                     name: '王小虎',
                     title: '上海市普陀区金沙江路 1518 弄',
                     class: '学术交流',
-                    content: 'test'
+                    content: 'test',
+                    id: '123'
                 }, {
                     create_time: '2016-05-02',
                     name: '张三',
                     title: '上海市普陀区金沙江路 1517 弄',
                     class: '行业资讯',
-                    content: '这是一篇文章'
+                    content: '这是一篇文章',
+                    id: '456'
                 }, {
                     create_time: '2016-05-03',
                     name: '李四',
                     title: '上海市普陀区金沙江路 1519 弄',
                     class: '申立德动态',
-                    content: ''
+                    content: '',
+                    id: '567'
                 }, {
                     create_time: '2016-05-04',
                     name: '王五',
                     title: '上海市普陀区金沙江路 1516 弄',
                     class: '新闻资讯',
-                    content: ''
+                    content: '经研究发现，先加载的编辑器后加载的数据结果导致数据没写进去。坑爹的异步加载。。这个异步加载把我折腾的很惨，到网上找文档，没有一个靠谱的，闹得我想骂娘。苦水吐到这里，开始解决问题。',
+                    id: '1234'
                 }],
                 article_class_data: [{
                     value: '1',
@@ -126,9 +130,9 @@
                 currentPage: 1, //当前页
                 dialogArticle: false, //修改文章开关
                 articleChangeData: '',
-                menuKey:1,   //重新加载组件
-                pageSize:'',    //每页条数
-                page:'',        //页数
+                menuKey: 1, //重新加载组件
+                pageSize: '', //每页条数
+                page: '', //页数
             };
         },
 
@@ -147,12 +151,13 @@
             articleUpdate(row) {
                 this.dialogArticle = true;
                 //将信息传入vuex
-                this.$store.dispatch('setArticleTitle',row.title);
-                this.$store.dispatch('setArticleClass',row.class);
-                this.$store.dispatch('setArticleName',row.name);
-                this.$store.dispatch('setArticleContent',row.content);
-                //重加载组件
-                ++this.menuKey
+                this.$store.dispatch('setArticleTitle', row.title);
+                this.$store.dispatch('setArticleClass', row.class);
+                this.$store.dispatch('setArticleName', row.name);
+                this.$store.dispatch('setArticleContent', row.content);
+                this.$store.dispatch('setArticleId', row.id)
+                    //重加载组件
+                    ++this.menuKey
             },
             //分页
             handleSizeChange(val) {
@@ -162,27 +167,27 @@
                 console.log(`当前页: ${val}`);
             },
             //删除文章
-            articleDelect(row){
-                var id=row.id;
-                this.$axios.delete('/api/news'+id).then((res)=>{
-                    if(res.state=='200'){
+            articleDelect(row) {
+                var id = row.id;
+                this.$axios.delete('/api/news' + id).then((res) => {
+                    if (res.state == '200') {
                         this.$message.error('删除成功')
-                    }else{
+                    } else {
                         this.$message.error('操作失败')
                     }
                 })
             },
             //获取文章列表
-            getArticleData(){
-                this.$axios.get('/api/news',{
-                    props:{
-                        size:this.pageSize,
-                        page:this.page,
-                        class:this.article_class
+            getArticleData() {
+                this.$axios.get('/api/news', {
+                    props: {
+                        size: this.pageSize,
+                        page: this.page,
+                        class: this.article_class
                     }
-                }).then((res)=>{
-                    if(res.state=='200'){
-                        this.articleData=res.data;
+                }).then((res) => {
+                    if (res.state == '200') {
+                        this.articleData = res.data;
                     }
                 })
             }
