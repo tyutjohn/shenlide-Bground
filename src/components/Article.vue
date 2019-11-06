@@ -1,7 +1,7 @@
 <!--
  * @Author: johnwang
  * @since: 2019-11-05 21:49:54
- * @lastTime: 2019-11-06 10:47:23
+ * @lastTime: 2019-11-06 11:41:09
  * @LastAuthor: Do not edit
  * @Github: https://github.com/tyutjohn
  -->
@@ -169,9 +169,12 @@
             //删除文章
             articleDelect(row) {
                 var id = row.id;
-                this.$axios.delete('/api/news' + id).then((res) => {
-                    if (res.state == '200') {
-                        this.$message.error('删除成功')
+                this.axios.delete('/api/news' + id).then((res) => {
+                    if (res.status==200) {
+                        this.$message({
+                            message:'删除成功',
+                            type:'success'
+                        })
                     } else {
                         this.$message.error('操作失败')
                     }
@@ -179,15 +182,16 @@
             },
             //获取文章列表
             getArticleData() {
-                this.$axios.get('/api/news', {
+                this.axios.get('/api/news', {
                     props: {
                         size: this.pageSize,
                         page: this.page,
                         class: this.article_class
                     }
                 }).then((res) => {
-                    if (res.state == '200') {
+                    if (res.status==200) {
                         this.articleData = res.data;
+                        //TO-DO 
                     }
                 })
             }

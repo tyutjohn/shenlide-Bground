@@ -1,7 +1,7 @@
 <!--
  * @Author: johnwang
  * @since: 2019-11-02 19:37:58
- * @lastTime: 2019-11-06 10:37:01
+ * @lastTime: 2019-11-06 10:53:45
  * @LastAuthor: Do not edit
  * @Github: https://github.com/tyutjohn
  -->
@@ -146,12 +146,14 @@
             //token验证获取用户信息
             getUser() {
                 const token = sessionStorage.getItem("userToken");
-                this.axios.get('/api/users/current', {
+                this.axios.get('/api/token/'+token, {
                     headers: {
                         Authorization: token
                     }
                 }).then(res => {
-                    this.user.userName = res.data.name
+                    //TODO
+                    console.log(res);
+                    this.user.userName=sessionStorage.getItem("userName")
                 })
             },
             handleOpen(key, keyPath) {

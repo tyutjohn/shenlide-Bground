@@ -1,7 +1,7 @@
 <!--
  * @Author: johnwang
  * @since: 2019-11-02 10:42:43
- * @lastTime: 2019-11-04 22:39:43
+ * @lastTime: 2019-11-06 10:50:02
  * @LastAuthor: Do not edit
  * @Github: https://github.com/tyutjohn
  -->
@@ -109,10 +109,10 @@
             });
             setTimeout(() => {
               //将用户名和token放入sessionStorage
-              sessionStorage.setItem("userName", this.formlogin.email);
+              sessionStorage.setItem("userName", this.formlogin.username);
               sessionStorage.setItem("userToken", res.data.token);
               //将信息存入vuex
-              this.$store.dispatch("setUser", this.formlogin.email);
+              this.$store.dispatch("setUser", this.formlogin.username);
               this.$store.dispatch("setToken", res.data.token);
               this.$router.push({
                 path: '/Home'

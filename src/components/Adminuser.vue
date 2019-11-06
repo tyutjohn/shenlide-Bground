@@ -1,7 +1,7 @@
 <!--
  * @Author: johnwang
  * @since: 2019-11-03 22:13:06
- * @lastTime: 2019-11-04 22:03:57
+ * @lastTime: 2019-11-06 11:37:43
  * @LastAuthor: Do not edit
  * @Github: https://github.com/tyutjohn
  -->
@@ -31,7 +31,7 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+          <el-button type="primary" @click="addAdmin()">确 定</el-button>
         </div>
       </el-dialog>
     </div>
@@ -46,8 +46,8 @@
         <el-table-column prop="grade" label="等级" width="180">
           <template slot-scope="scope">
             <el-button type="success">
-            <i class="el-icon-price-tag"></i>
-            <span style="margin-left: 10px">{{ scope.row.grade }}</span>
+              <i class="el-icon-price-tag"></i>
+              <span style="margin-left: 10px">{{ scope.row.grade }}</span>
             </el-button>
           </template>
         </el-table-column>
@@ -75,7 +75,7 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogPassword = false">取 消</el-button>
-          <el-button type="primary" @click="dialogPassword = false">确 定</el-button>
+          <el-button type="primary" @click="updateConfirm()">确 定</el-button>
         </div>
       </el-dialog>
     </div>
@@ -172,6 +172,7 @@
           password: '',
           password2: ''
         },
+        username: '', //删除用户变量
         rules: { //验证规则
           password: [{
             validator: validatePass,
@@ -194,12 +195,74 @@
     mounted() {},
 
     methods: {
+      addAdmin() { //添加管理员
+        this.axios.post('/api/admin', {
+          username: this.form.username,
+          password: this.form.password,
+          grade: this.form.grade
+        }).then(res => {
+          if (res.status == 200) {
+            this.$message({
+              message: '注册成功',
+              type: 'success'
+            });
+            this.dialogFormVisible = false;
+          } else {
+            this.$message.error('注册失败')
+          }
+        })
+      },
       userUpdate(row) { //修改密码
         this.dialogPassword = true;
-        console.log(row)
+        this.username = row.username;
+      },
+      updateConfirm() {
+        this.axios.put('/api/admin/' + this.username, {
+          password: this.formPass.password
+        }).then(res => {
+          if (res.status == 200) {
+            this.$message({
+              message: '修改成功',
+              type: 'success'
+            })
+            setTimeout(() => {
+              this.dialogPassword = false;
+            }, 1000)
+          } else {
+            this.$message.error('修改失败')
+          }
+        })
       },
       userDelect(row) { //删除管理员
-        console.log(row)
+        this.username = row.username;
+        this.$confirm('此操作将永久删除该管理员, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.axios.delete('/api/admin/' + this.username).then(res => {
+            if (res.status == 200) {
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              });
+            } else {
+              this.$message.error('删除失败')
+            }
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
+      },
+      //获取管理员列表
+      getAdmin(){
+        this.axios.get('/api/admin').then(res=>{
+          console.log(res);
+          //TO-DO
+        })
       }
     },
 

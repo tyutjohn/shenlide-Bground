@@ -157,7 +157,7 @@
           name: this.article.name,
           content: this.info_
         }).then(res => {
-          if (res.state == '200') {
+          if (res.status == '200') {
             this.$message({
               message: '文章修改成功',
               type: 'success'

@@ -1,7 +1,7 @@
 <!--
  * @Author: johnwang
  * @since: 2019-11-06 08:25:09
- * @lastTime: 2019-11-06 09:53:43
+ * @lastTime: 2019-11-06 11:40:28
  * @LastAuthor: Do not edit
  * @Github: https://github.com/tyutjohn
  -->
@@ -187,7 +187,7 @@
                     remark: this.clientForm.remark,
                     status: this.clientForm.status
                 }).then((res) => {
-                    if (res.state == '200') {
+                    if (res.status==200) {
                         this.$message({
                             message: '修改成功',
                             type: 'success'
@@ -207,7 +207,7 @@
                 }).then(() => {
                     var id = row.id;
                     this.axios.delete('/api/customer/' + id).then(res => {
-                        if (res.state == '200') {
+                        if (res.status==200) {
                             this.$message({
                                 type: 'success',
                                 message: '删除成功!'
@@ -222,6 +222,13 @@
                         message: '已取消删除'
                     });
                 });
+            },
+            //获取客户列表
+            getClient(){
+                this.axios.get('/api/customer').then(res=>{
+                    console.log(res);
+                    //TO-DO
+                })
             }
         },
 

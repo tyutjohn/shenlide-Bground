@@ -1,7 +1,7 @@
 <!--
  * @Author: johnwang
  * @since: 2019-11-03 14:23:52
- * @lastTime: 2019-11-05 00:12:50
+ * @lastTime: 2019-11-06 11:40:01
  * @LastAuthor: Do not edit
  * @Github: https://github.com/tyutjohn
  -->
@@ -157,7 +157,7 @@
           name: this.name,
           content: this.info_
         }).then(res => {
-          if (res.data.status == '200') {
+          if (res.status==200) {
             this.$message({
               message: '文章发布成功',
               type: 'success'
