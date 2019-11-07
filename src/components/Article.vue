@@ -1,7 +1,7 @@
 <!--
  * @Author: johnwang
  * @since: 2019-11-05 21:49:54
- * @lastTime: 2019-11-07 20:57:47
+ * @lastTime: 2019-11-07 22:14:40
  * @LastAuthor: Do not edit
  * @Github: https://github.com/tyutjohn
  -->
@@ -94,6 +94,16 @@
             return {
                 articleData: [],    //  获取文章列表数据
                 category: '', //选择文章类型
+                article_class_data:[{
+                    value:'1',
+                    label:'行业资讯'
+                },{
+                    value:'2',
+                    label:'申立德动态'
+                },{
+                    value:'3',
+                    label:'学术交流'
+                }],
                 currentPage: 1, //当前页
                 dialogArticle: false, //修改文章开关
                 articleChangeData: '',
