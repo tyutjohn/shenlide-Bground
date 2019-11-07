@@ -1,7 +1,7 @@
 <!--
  * @Author: johnwang
  * @since: 2019-11-06 08:25:09
- * @lastTime: 2019-11-06 11:40:28
+ * @lastTime: 2019-11-07 20:21:39
  * @LastAuthor: Do not edit
  * @Github: https://github.com/tyutjohn
  -->
@@ -19,16 +19,16 @@
             </el-table-column>
             <el-table-column prop="name" label="称呼" width="120">
             </el-table-column>
-            <el-table-column prop="intendent" label="意向" width="300">
+            <el-table-column prop="intention" label="意向" width="300">
             </el-table-column>
             <el-table-column prop="remark" label="备注" width="200">
             </el-table-column>
             <el-table-column prop="status" label="状态" width="100"
-                :filters="[{ text: '已联系', value: '0' }, { text: '未联系', value: '1' }]" :filter-method="filterTag"
+                :filters="[{ text: '已联系', value: '1' }, { text: '未联系', value: '0' }]" :filter-method="filterTag"
                 filter-placement="bottom-end">
                 <template slot-scope="scope">
-                    <el-tag :type="scope.row.status === '0' ? 'success' : 'warning'" disable-transitions>
-                        {{scope.row.status}}
+                    <el-tag :type="scope.row.status === '1' ? 'success' : 'warning'" disable-transitions>
+                        {{getStatus(scope.row.status)}}
                     </el-tag>
                 </template>
             </el-table-column>
@@ -44,13 +44,13 @@
         <el-dialog title="修改客户资料" :visible.sync="dialogFormVisible">
             <el-form :model="clientForm">
                 <el-form-item label="客户电话" :label-width="formLabelWidth">
-                    <el-input v-model="clientForm.tel" autocomplete="off" :disabled="true"></el-input>
+                    <el-input v-model="clientForm.tel" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="客户意向" :label-width="formLabelWidth">
-                    <el-input v-model="clientForm.intendent" :disabled="true"></el-input>
+                    <el-input v-model="clientForm.intention" :disabled="true"></el-input>
                 </el-form-item>
                 <el-form-item label="客户称呼" :label-width="formLabelWidth">
-                    <el-input v-model="clientForm.name" :disabled="true"></el-input>
+                    <el-input v-model="clientForm.name"></el-input>
                 </el-form-item>
                 <el-form-item label="备注" :label-width="formLabelWidth">
                     <el-input type="textarea" :rows="2" placeholder="请输入备注内容" v-model="clientForm.remark">
@@ -58,8 +58,8 @@
                 </el-form-item>
                 <el-form-item label="状态" :label-width="formLabelWidth">
                     <el-select v-model="clientForm.status" placeholder="请选择该状态">
-                        <el-option label="已处理" value="0"></el-option>
-                        <el-option label="未处理" value="1"></el-option>
+                        <el-option label="已处理" value="1"></el-option>
+                        <el-option label="未处理" value="0"></el-option>
                     </el-select>
                 </el-form-item>
             </el-form>
@@ -71,7 +71,7 @@
         <div class="client-bottom">
             <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
                 :current-page="currentPage" :page-sizes="[10, 20, 50, 100]" :page-size="10"
-                layout="total, sizes, prev, pager, next, jumper" :total="100">
+                layout="total, sizes, prev, pager, next, jumper" :total="count">
             </el-pagination>
         </div>
     </div>
@@ -95,49 +95,23 @@
 </style>
 
 <script>
+    const config = {
+        headers: {
+            'Authorization': "bearer " + sessionStorage.getItem('userToken')
+        }
+    }
     export default {
         data() {
             return {
-                clientData: [{ //  客户资料
-                    tel: '15503676579',
-                    intendent: '有意向合作',
-                    name: '王先生',
-                    remark: '',
-                    status: '1',
-                    create_time: '2019-11-03',
-                    id: ''
-                }, {
-                    tel: '13934964859',
-                    intendent: '请问如何资讯',
-                    name: '张三',
-                    remark: '',
-                    status: '1',
-                    create_time: '2019-11-04',
-                    id: ''
-                }, {
-                    tel: '13663469862',
-                    intendent: '贵公司的费用如何。。。。',
-                    name: '李四',
-                    remark: '',
-                    status: '1',
-                    create_time: '2019-11-06',
-                    id: ''
-                }, {
-                    tel: '15636596553',
-                    intendent: '资讯意向。。。。。。',
-                    name: '王五',
-                    remark: '',
-                    status: '0',
-                    create_time: '2019-11-08',
-                    id: ''
-                }],
+                clientData: [], //客户列表
                 currentPage: 1, //当前页数
+                count:0,   //客户总数
                 size: '', //每页条数
                 page: '', //页数
                 dialogFormVisible: false, //修改客户外层
                 clientForm: { //修改客户表单
                     tel: '',
-                    intendent: '',
+                    intention: '',
                     name: '',
                     remark: '',
                     status: '',
@@ -149,11 +123,24 @@
 
         components: {},
 
-        computed: {},
+        computed: {
+            getStatus() {
+                return function (res) {
+                    switch (res) {
+                        case '1':
+                            return '已联系';
+                        case '0':
+                            return '未联系';
+                    }
+                }
+            }
+        },
 
         beforeMount() {},
 
-        mounted() {},
+        mounted() {
+            this.getClient();
+        },
 
         methods: {
             //状态过滤
@@ -171,7 +158,7 @@
             clientUpdate(row) {
                 this.dialogFormVisible = true;
                 this.clientForm.tel = row.tel;
-                this.clientForm.intendent = row.intendent;
+                this.clientForm.intention = row.intention;
                 this.clientForm.name = row.name;
                 this.clientForm.remark = row.remark;
                 this.clientForm.status = row.status;
@@ -182,17 +169,18 @@
                 var id = this.clientForm.id;
                 this.axios.put('/api/customer/' + id, {
                     tel: this.clientForm.tel,
-                    intendent: this.clientForm.intendent,
+                    intention: this.clientForm.intention,
                     name: this.clientForm.name,
                     remark: this.clientForm.remark,
                     status: this.clientForm.status
-                }).then((res) => {
-                    if (res.status==200) {
+                },config).then((res) => {
+                    if (res.status == 200) {
                         this.$message({
                             message: '修改成功',
                             type: 'success'
                         });
                         this.dialogFormVisible = false;
+                        this.getClient();
                     } else {
                         this.$message.error('修改失败');
                     }
@@ -206,13 +194,14 @@
                     type: 'warning'
                 }).then(() => {
                     var id = row.id;
-                    this.axios.delete('/api/customer/' + id).then(res => {
-                        if (res.status==200) {
+                    this.axios.delete('/api/customer/' + id,config).then(res => {
+                        if (res.status == 200) {
                             this.$message({
                                 type: 'success',
                                 message: '删除成功!'
                             });
-                        }else{
+                            this.getClient();
+                        } else {
                             this.$message.error('删除失败');
                         }
                     });
@@ -224,10 +213,20 @@
                 });
             },
             //获取客户列表
-            getClient(){
-                this.axios.get('/api/customer').then(res=>{
-                    console.log(res);
-                    //TO-DO
+            getClient() {
+                this.axios.get('/api/customer',{
+                    params:{
+                        page:this.page,
+                        size:this.size
+                    },
+                    config
+                }).then(res => {
+                    if(res.status==200){
+                        this.clientData=res.data.customers;
+                        this.count=res.data.count;
+                    }else{
+                        this.$message.error('获取服务器数据失败');
+                    }
                 })
             }
         },

@@ -1,7 +1,7 @@
 <!--
  * @Author: johnwang
  * @since: 2019-11-02 20:11:45
- * @lastTime: 2019-11-06 11:19:01
+ * @lastTime: 2019-11-07 15:02:28
  * @LastAuthor: Do not edit
  * @Github: https://github.com/tyutjohn
  -->
@@ -24,7 +24,9 @@
               {{userImfor.userName}}<i class="el-icon-arrow-down el-icon--right"></i>
             </el-button>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item><p @click="logOut()">退出登陆</p></el-dropdown-item>
+              <el-dropdown-item>
+                <p @click="logOut()">退出登陆</p>
+              </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </div>
@@ -58,6 +60,11 @@
 </style>
 
 <script>
+  const config = {
+    headers: {
+      'Authorization': "bearer " + sessionStorage.getItem('userToken')
+    }
+  }
   import {
     Loading
   } from 'element-ui';
@@ -81,7 +88,7 @@
     methods: {
       //退出登陆
       logOut() {
-        this.axios.post('/api/admin/logout').then(res => {
+        this.axios.post('/api/admin/logout',config).then(res => {
           if (res.status == 200) {
             Loading.service({
               fullscreen: true,

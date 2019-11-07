@@ -1,7 +1,7 @@
 <!--
  * @Author: johnwang
  * @since: 2019-11-02 00:29:39
- * @lastTime: 2019-11-02 19:48:58
+ * @lastTime: 2019-11-07 22:03:12
  * @LastAuthor: Do not edit
  * @Github: https://github.com/tyutjohn
  -->
@@ -21,3 +21,7 @@ html,body{
   height:100%;
 }
 </style>
+
+<script>
+// document.title='申立德后台管理系统'
+</script>

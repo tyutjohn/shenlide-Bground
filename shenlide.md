@@ -116,13 +116,13 @@
 
 ​			tel	电话
 
-​			intendent	意向
+​			intention	意向
 
 ​			name	名字
 
 ​		返回：
 
-​			`{tel, intendent, name}`
+​			`{tel, intention, name}`
 
 ### 2. 获取客户列表
 
@@ -134,7 +134,7 @@
 
 ​		返回：
 
-​			`[{tel, intendent, name , remark, status, createtime}]`
+​			`[{tel, intention, name , remark, status, createtime}]`
 
 ### 3. 获取客户信息
 
@@ -146,7 +146,7 @@
 
 ​		返回：
 
-​			`{tel, intendent, name , remark, status, create_time}`
+​			`{tel, intention, name , remark, status, create_time}`
 
 ### 4. 修改客户信息
 
@@ -160,7 +160,7 @@
 
 ​			tel	电话
 
-​			intendent	意向
+​			intention	意向
 
 ​			name	名字
 
@@ -170,7 +170,7 @@
 
 ​		返回：
 
-​			`{tel, intendent, name , remark, status, create_time}`
+​			`{tel, intention, name , remark, status, create_time}`
 
 ### 5. 删除客户信息
 

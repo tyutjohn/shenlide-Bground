@@ -24,7 +24,7 @@
         <el-option label="申立德动态" value="2"></el-option>
         <el-option label="学术交流" value="3"></el-option>
       </el-select>
-      <el-input size="medium" placeholder="请输入发布者" suffix-icon="el-icon-user" v-model="article.name"
+      <el-input size="medium" placeholder="请输入作者" suffix-icon="el-icon-user" v-model="article.name"
         style="width:200px">
       </el-input>
       <el-button type="warning" @click="PublishArticle()">确认修改</el-button>
@@ -70,6 +70,11 @@
 </style>
 
 <script>
+  const config = {
+    headers: {
+      'Authorization': "bearer " + sessionStorage.getItem('userToken')
+    }
+  }
   import E from 'wangeditor'
   export default {
     name: 'editoritem',
@@ -81,7 +86,7 @@
           title: '', //标题
           articleClass: '', //类别
           name: '', //发布者
-          id: ''    //文章id
+          id: '' //文章id
         }
       };
     },
@@ -153,10 +158,10 @@
         var id = this.article.id;
         this.axios.put('/api/news/' + id, {
           title: this.article.title,
-          class: this.article.articleClass,
-          name: this.article.name,
+          category: this.article.articleClass,
+          author: this.article.name,
           content: this.info_
-        }).then(res => {
+        },config).then(res => {
           if (res.status == '200') {
             this.$message({
               message: '文章修改成功',
@@ -173,7 +178,7 @@
         this.article.title = this.$store.state.article.title;
         this.article.articleClass = this.$store.state.article.class;
         this.info_ = this.$store.state.article.content;
-        this.article.id=this.$store.state.article.id;
+        this.article.id = this.$store.state.article.id;
       }
     },
 
@@ -194,7 +199,7 @@
       info_() {
         var html = this.info_;
         document.querySelector('#content').innerHTML = html;
-        this.content=this.info_;
+        this.content = this.info_;
       }
     }
 

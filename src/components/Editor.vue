@@ -1,7 +1,7 @@
 <!--
  * @Author: johnwang
  * @since: 2019-11-03 14:23:52
- * @lastTime: 2019-11-06 11:40:01
+ * @lastTime: 2019-11-07 21:10:11
  * @LastAuthor: Do not edit
  * @Github: https://github.com/tyutjohn
  -->
@@ -31,7 +31,7 @@
         <el-option label="申立德动态" value="2"></el-option>
         <el-option label="学术交流" value="3"></el-option>
       </el-select>
-      <el-input size="medium" placeholder="请输入发布者" suffix-icon="el-icon-user" v-model="name" style="width:200px">
+      <el-input size="medium" placeholder="请输入作者" suffix-icon="el-icon-user" v-model="name" style="width:200px">
       </el-input>
       <el-button type="primary" @click="PublishArticle()">发布</el-button>
     </div>
@@ -76,7 +76,15 @@
 </style>
 
 <script>
+  const config = {
+    headers: {
+      'Authorization': "bearer " + sessionStorage.getItem('userToken')
+    }
+  }
   import E from 'wangeditor'
+  import {
+    Loading
+  } from 'element-ui';
   export default {
     name: 'editoritem',
     data() {
@@ -153,20 +161,23 @@
       PublishArticle() {
         this.axios.post('/api/news', {
           title: this.title,
-          class: this.articleClass,
-          name: this.name,
+          category: this.articleClass,
+          author: this.name,
           content: this.info_
-        }).then(res => {
-          if (res.status==200) {
-            this.$message({
-              message: '文章发布成功',
-              type: 'success'
+        },config).then(res => {
+          if (res.status == 200) {
+            Loading.service({
+              fullscreen: true,
+              text: '文章上传成功'
             });
-            this.title='';
-            this.articleClass='';
-            this.name='';
-            this.info_='';
-          }else{
+            setTimeout(() => {
+              this.title = '';
+              this.articleClass = '';
+              this.name = '';
+              this.info_ = '';
+              Loading.service().close();
+            }, 1000)
+          } else {
             this.$message.error('文章发布失败');
           }
         })
