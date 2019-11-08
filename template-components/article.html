@@ -1,0 +1,196 @@
+<!--
+ * @Author: johnwang
+ * @since: 2019-11-08 11:40:54
+ * @lastTime: 2019-11-08 13:40:48
+ * @LastAuthor: Do not edit
+ * @Github: https://github.com/tyutjohn
+ -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>article-list</title>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link href="https://cdn.bootcss.com/wangEditor/10.0.13/wangEditor.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #eff3f5;
+        }
+
+        .article {
+            width: 80%;
+            margin: 0 auto;
+            height: 100%;
+            background: #ffffff;
+        }
+
+        .article-header {
+            padding-top: 10px;
+            padding-left: 16px;
+            height: 110px;
+        }
+
+        .article-header .title {
+            max-width: 640px;
+            white-space: nowrap;
+            overflow: hidden;
+            font-size: 20px;
+            color: #2c3e50;
+            font-weight: bold;
+            height: 30px;
+        }
+
+        .header-infor {
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        .header-infor-p {
+            margin-right: 20px;
+            color: #b8c4ce
+        }
+
+        .article-content {
+            padding: 30px 20px;
+            border-bottom: 1px solid #eff3f5;
+            font-size: 16px;
+            font-family: "Microsoft Yahei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            outline: none;
+            word-wrap: break-word;
+        }
+
+        .article-footer {
+            display: flex;
+            justify-content: space-between;
+            color: #b8c4ce;
+            height: 30px;
+            margin-top:10px;
+        }
+
+        @media screen and (max-width:580px) {
+            .article {
+                width: 96%;
+            }
+
+            .article-header {
+                padding-top: 4px;
+                padding-left: 10px;
+                height: 100px;
+            }
+
+            .article-header .title {
+                max-width: 300px;
+                font-size: 18px;
+                height: 26px;
+            }
+
+            .article-content {
+                padding: 6px 10px;
+                font-size: 14px;
+                line-height: 1.5;
+            }
+
+            .article-footer {
+                height: 24px;
+                font-size: 12px;
+                padding-top: 4px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="article">
+            <div class="article-header">
+                <p class="title"><strong>{{articleData.title}}</strong></p>
+                <div class="header-infor">
+                    <div class="header-infor-p" style="color:#34495e">原创文章</div>
+                    <div class="header-infor-p">
+                        分类:<a style="display: inline;color:#3498db;text-decoration: none;"
+                            href="#">{{getClassName(articleData.category)}}</a>
+                    </div>
+                    <div class="header-infor-p">版权:申立德</div>
+                </div>
+                <div style="margin-top:6px">
+                    <i class="el-icon-time" style="color:#9aabb8"></i>
+                    <p style="color:#9aabb8;display:inline">{{articleData.create_time}}</p>
+                </div>
+            </div>
+            <el-divider></el-divider>
+            <div class="article-content" id="article" v-html="articleData.content"></div>
+            <div class="article-footer">
+                <div style="margin-left:20px">
+                    <i class="el-icon-news"></i>
+                    <p style="display:inline;margin-left:6px">申立德</p>
+                </div>
+                <div style="margin-right: 20px;">
+                    <i class="el-icon-time"></i>
+                    <p style="display: inline;margin-left:6px;">创建于:{{articleData.create_time}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--引入vue-cdn-->
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://cdn.bootcss.com/axios/0.19.0/axios.min.js"></script>
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <!--引入wangEditor-->
+    <script src="https://cdn.bootcss.com/wangEditor/10.0.13/wangEditor.min.js"></script>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                articleData: {
+                    title: '文章标题', //标题
+                    author: '小王', //作者
+                    category: '1', //类别
+                    content: '这是一篇文章,<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;这一次也是根据LEO分享的原型图，进行了图标改变，重新设计了原型图界面，之后自己设计一种简约清新风格的版面。</p><p>请各位多多指教！</p><h1>&nbsp; &nbsp; 测试排版</h1><p>&nbsp; &nbsp; &nbsp; &nbsp; 这是一篇设计风格的测试图，<span style="text-decoration-line: underline; color: rgb(77, 128, 191);">采用原型设计</span>，<span style="color: rgb(194, 79, 74);">颜色测试</span><br></p><p><span style="color: rgb(194, 79, 74);">比如这是排版测试，<span style="background-color: rgb(77, 128, 191);">背景色测试</span><span style="background-color: rgb(255, 255, 255);"> 飞搭，白色底色，</span></span></p><p style="text-align: center;"><a href="http://www.baidu.com" target="_blank">这是百度链接</a>,居中设置<span style="font-size: 16px; text-align: left;">&nbsp;</span></p><p style="text-align: left;"><span style="font-size: 16px; text-align: left;">插一张图片</span></p><p style="text-align: left;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEQAAABECAYAAAA4E5OyAAABOUlEQVR4nO3b0Q2CMBRA0adxFR1Dp5Ah2cI1XEa/NHoDBqWFV3PPnybEcqmNSetmfzzfQk/btQeQjUHAIGAQMAgYBAwCBgGDgEFgt/YASrte+rfXh1P31fVVg3BwU317E6+fx2uH3vtk0RkyNrBfw9VQNciUp/WI8eusKC3FopolRsSfLaqHU5d7UV3D3NmW4iuTiUHAIGAQMAgYBAwCBgGDgEHAIGAQMAgYBAwCBgGDgEHAIGAQMAgYBAwCBgGDQPM7d69blyX2iJueITVODjQdJGJ4g3uOZoPM3eUf02yQiDrnSpoMUvMIVnNBah/BShFkyhO/XvrBGKVnS5rfIVNubGxWlJwti55THRp4pgN3EQvPkEznUcds/FfmuxSLaiYGAYOAQcAgYBAwCBgEDAIGAYOAQcAgcAeA9UR/iGNYVwAAAABJRU5ErkJggg==" style="max-width:100%;"><span style="font-size: 16px; text-align: left;"><br></span></p><p style="text-align: left;">插一张网络图片</p><p style="text-align: left;"><img src="https://imgavater.ui.cn/avatar/1/6/0/1/951061.jpg?imageMogr2/auto-orient/crop/!1125x1125a0a798/thumbnail/148x148" style="max-width:100%;"><br></p>', //内容
+                    create_time: '2019-11-01', //发布时间
+                }
+            },
+            beforeMount() {
+                //this.getArticle();    //测试阶段先注释
+            },
+            mounted() {
+
+            },
+            methods: {
+                //获取文章数据
+                getArticle(){
+                    axios.get('/api/news/'+id).then(res=>{
+                        if(res.status==200){
+                            this.articleData=res.data;
+                        }else{
+                            this.$message.error('网络异常');
+                        }
+                    })
+                }
+
+            },
+            computed: {
+                getClassName() {
+                    return function (res) {
+                        switch (res) {
+                            case '1':
+                                return '行业资讯'
+                            case '2':
+                                return '申立德动态'
+                            case '3':
+                                return '学术交流'
+                        }
+                    }
+                }
+            },
+        })
+    </script>
+</body>
+
+</html>

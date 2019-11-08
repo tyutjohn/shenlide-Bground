@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>customer</title>
+</head>
+
+<body>
+    <div id="app">
+        <form>
+            <input type="number" placeholder="请留下您的联系方式" v-model="customer.tel">
+            <input type="text" placeholder="请留下您的个人意向" v-model="customer.intention">
+        </form>
+        <button type="button" @click="upLoad()">提交</button>
+    </div>
+    <!--引入vue-cdn-->
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://cdn.bootcss.com/axios/0.19.0/axios.min.js"></script>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                customer:{      //客户信息
+                    tel:'',     //电话
+                    intention:''    //意向
+                }
+            },
+            methods: {
+                //提交信息
+                upLoad(){
+                    axios.post('/api/customer',{
+                        tel:this.customer.tel,
+                        intention:this.customer.intention
+                    }).then(res=>{
+                        if(res.status==200){
+                            //TO-DO     提交成功
+                        }else{
+                            //TO-DO  失败
+                        }
+                    })
+                }
+            },
+        })
+    </script>
+</body>
+
+</html>
