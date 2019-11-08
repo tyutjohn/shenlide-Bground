@@ -1,12 +1,12 @@
 /*
  * @Author: johnwang
  * @since: 2019-11-02 00:29:39
- * @lastTime: 2019-11-06 00:34:58
+ * @lastTime: 2019-11-08 22:35:09
  * @LastAuthor: Do not edit
  * @Github: https://github.com/tyutjohn
  */
-import Vue from 'vue'
-import Vuex from 'vuex'
+import Vue from 'vue';
+import Vuex from 'Vuex';
 import getters from './getters'
 import mutations from './mutations'
 import actions from './actions'

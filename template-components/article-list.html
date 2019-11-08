@@ -1,7 +1,7 @@
 <!--
  * @Author: johnwang
  * @since: 2019-11-07 22:48:07
- * @lastTime: 2019-11-07 23:01:09
+ * @lastTime: 2019-11-08 15:18:43
  * @LastAuthor: Do not edit
  * @Github: https://github.com/tyutjohn
  -->
@@ -16,27 +16,36 @@
     <!-- 引入样式 -->
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
     <style>
-        .text {
-            font-size: 14px;
+        .article-list {
+            width: 80%;
+            margin: 0 auto;
         }
 
-        .item {
-            padding: 18px 0;
-        }
-
-        .box-card {
-            width: 900px;
+        .list-content{
+            display:flex;
+            justify-content: space-between;
         }
     </style>
 </head>
 
 <body>
     <div id="app">
-        <el-card class="box-card">
-            <div v-for="o in 4" :key="o" class="text item">
-                {{'列表内容 ' + o }}
-            </div>
-        </el-card>
+        <el-tabs v-model="activeName" @tab-click="handleClick" class="article-list">
+            <el-tab-pane label="用户管理" name="first">
+                <el-card>
+                    <p>{{articleList.title}}</p>
+                    <div class="list-content">
+                        <div>
+                            <i class="el-icon-time"></i>{{articleList.create_time}}
+                            <i class="el-icon-menu">类别:</i>{{getArticleClass(articleList.category)}}
+                        </div>
+                        <div><i class="el-icon-user">作者:</i>{{articleList.author}}</div>
+                    </div>
+                </el-card>
+            </el-tab-pane>
+            <el-tab-pane label="配置管理" name="second">配置管理</el-tab-pane>
+            <el-tab-pane label="角色管理" name="third">角色管理</el-tab-pane>
+        </el-tabs>
     </div>
     <!--引入vue-cdn-->
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
@@ -47,10 +56,32 @@
         var app = new Vue({
             el: '#app',
             data: {
-
+                activeName: 'first',
+                articleList: {
+                    title: '文章标题', //标题
+                    author: '小王', //作者
+                    category: '1', //类别
+                    create_time: '2019-11-01', //发布时间
+                }
+            },
+            computed: {
+                getArticleClass() {
+                    return function (res) {
+                        switch (res) {
+                            case '1':
+                                return '行业资讯'
+                            case '2':
+                                return '申立德动态'
+                            case '3':
+                                return '学术交流'
+                        }
+                    }
+                }
             },
             methods: {
-
+                handleClick(tab, event) {
+                    console.log(tab, event);
+                }
             },
         })
     </script>

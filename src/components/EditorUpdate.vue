@@ -1,7 +1,7 @@
 <template>
   <div class="editor">
     <div class="editor-main">
-      <div class="felx">
+      <div style="width:100%">
         <div class="edit">
           <el-divider content-position="center">编辑区</el-divider>
           <div ref="toolbar" class="toolbar">
@@ -9,10 +9,6 @@
           <div style="padding: 5px 0; color: #ccc">中间隔离带</div>
           <div ref="editor" class="text">
           </div>
-        </div>
-        <div class="preview">
-          <el-divider content-position="center">预览区</el-divider>
-          <div id="content" class="text" style="margin-top:86px"></div>
         </div>
       </div>
     </div>
@@ -76,6 +72,7 @@
     }
   }
   import E from 'wangeditor'
+  import qs from 'qs'
   export default {
     name: 'editoritem',
     data() {
@@ -110,12 +107,12 @@
     computed: {},
 
     beforeMount() {
-      this.initArticle()
+      this.initArticle();
+      this.getArticleContent();
     },
 
     mounted() {
-      this.seteditor()
-      this.editor.txt.html(this.info_)
+      this.seteditor();
     },
 
     methods: {
@@ -155,13 +152,13 @@
       },
       //修改文章
       PublishArticle() {
-        var id = this.article.id;
-        this.axios.put('/api/news/' + id, {
+        let param=qs.stringify({
           title: this.article.title,
           category: this.article.articleClass,
           author: this.article.name,
           content: this.info_
-        },config).then(res => {
+        });
+        this.axios.put('/api/news/' + this.article.id,param,config).then(res => {
           if (res.status == '200') {
             this.$message({
               message: '文章修改成功',
@@ -177,8 +174,13 @@
         this.article.name = this.$store.state.article.name;
         this.article.title = this.$store.state.article.title;
         this.article.articleClass = this.$store.state.article.class;
-        this.info_ = this.$store.state.article.content;
         this.article.id = this.$store.state.article.id;
+      },
+      //获取content内容
+      getArticleContent(){
+        this.axios.get('/api/news/'+this.article.id).then(res=>{
+          this.info_=res.data.content;
+        })
       }
     },
 
@@ -197,9 +199,7 @@
       },
       //value为编辑框输入的内容，这里我监听了一下值，当父组件调用得时候，如果给value赋值了，子组件将会显示父组件赋给的值
       info_() {
-        var html = this.info_;
-        document.querySelector('#content').innerHTML = html;
-        this.content = this.info_;
+        this.editor.txt.html(this.info_)
       }
     }
 

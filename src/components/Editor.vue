@@ -1,14 +1,14 @@
 <!--
  * @Author: johnwang
  * @since: 2019-11-03 14:23:52
- * @lastTime: 2019-11-07 21:10:11
+ * @lastTime: 2019-11-09 01:08:05
  * @LastAuthor: Do not edit
  * @Github: https://github.com/tyutjohn
  -->
 <template>
   <div class="editor">
     <div class="editor-main">
-      <div class="felx">
+      <div style="width:100%">
         <div class="edit">
           <el-divider content-position="center">编辑区</el-divider>
           <div ref="toolbar" class="toolbar">
@@ -16,10 +16,6 @@
           <div style="padding: 5px 0; color: #ccc">中间隔离带</div>
           <div ref="editor" class="text">
           </div>
-        </div>
-        <div class="preview">
-          <el-divider content-position="center">预览区</el-divider>
-          <div id="content" class="text" style="margin-top:86px"></div>
         </div>
       </div>
     </div>
@@ -54,9 +50,13 @@
     border: 1px solid #ccc;
   }
 
-  .text {
+   .text {
     border: 1px solid #ccc;
     min-height: 500px;
+    font-size:16px !important;
+    padding-top:0 !important;
+    text-align: start !important;
+    height:auto !important;
   }
 
   .preview {
@@ -85,6 +85,7 @@
   import {
     Loading
   } from 'element-ui';
+  import qs from 'qs'
   export default {
     name: 'editoritem',
     data() {
@@ -119,7 +120,6 @@
 
     mounted() {
       this.seteditor()
-      this.editor.txt.html(this.value)
     },
 
     methods: {
@@ -159,13 +159,15 @@
       },
       //发布文章
       PublishArticle() {
-        this.axios.post('/api/news', {
+        let param=qs.stringify({
           title: this.title,
           category: this.articleClass,
           author: this.name,
           content: this.info_
-        },config).then(res => {
-          if (res.status == 200) {
+        });
+        this.axios.post('/api/news',param,config).then(res => {
+          console.log(res)
+          if (res.data) {
             Loading.service({
               fullscreen: true,
               text: '文章上传成功'
@@ -198,11 +200,6 @@
         }
       },
       //value为编辑框输入的内容，这里我监听了一下值，当父组件调用得时候，如果给value赋值了，子组件将会显示父组件赋给的值
-      info_() {
-        var html = this.info_;
-        console.log(this.info_);
-        document.querySelector('#content').innerHTML = html;
-      }
     }
 
   }

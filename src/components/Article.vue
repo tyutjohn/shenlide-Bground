@@ -1,7 +1,7 @@
 <!--
  * @Author: johnwang
  * @since: 2019-11-05 21:49:54
- * @lastTime: 2019-11-07 22:14:40
+ * @lastTime: 2019-11-09 01:05:46
  * @LastAuthor: Do not edit
  * @Github: https://github.com/tyutjohn
  -->
@@ -27,11 +27,13 @@
             <el-table :data="articleData" style="width: 100%;padding:0 20px">
                 <el-table-column prop="title" label="标题" width="400">
                 </el-table-column>
-                <el-table-column prop="category" label="类型" width="150">
+                <el-table-column label="类型" width="150">
+                    <template slot-scope="scope">{{getActicleClass(scope.row.category)}}</template>
                 </el-table-column>
                 <el-table-column prop="author" label="作者" width="150">
                 </el-table-column>
-                <el-table-column prop="create_time" label="发布时间" width="200" sortable>
+                <el-table-column label="发布时间" width="200" sortable>
+                    <template slot-scope="scope">{{changeTime(scope.row.create_time)}}</template>
                 </el-table-column>
                 <el-table-column fixed="right" label="操作" width="300">
                     <template slot-scope="scope">
@@ -45,7 +47,7 @@
             </el-dialog>
             <div style="margin-top:10px">
                 <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-                    :current-page="currentPage" :page-sizes="[10,20,50,100]" :page-size="100"
+                    :current-page="currentPage" :page-sizes="[6,10,20,100]" :page-size="6"
                     layout="total, sizes, prev, pager, next, jumper" :total="count">
                 </el-pagination>
             </div>
@@ -92,24 +94,24 @@
     export default {
         data() {
             return {
-                articleData: [],    //  获取文章列表数据
+                articleData: [], //  获取文章列表数据
                 category: '', //选择文章类型
-                article_class_data:[{
-                    value:'1',
-                    label:'行业资讯'
-                },{
-                    value:'2',
-                    label:'申立德动态'
-                },{
-                    value:'3',
-                    label:'学术交流'
+                article_class_data: [{
+                    value: '1',
+                    label: '行业资讯'
+                }, {
+                    value: '2',
+                    label: '申立德动态'
+                }, {
+                    value: '3',
+                    label: '学术交流'
                 }],
                 currentPage: 1, //当前页
                 dialogArticle: false, //修改文章开关
                 articleChangeData: '',
                 menuKey: 1, //重新加载组件
-                pageSize: '', //每页条数
-                page: '', //页数
+                pageSize: 6, //每页条数
+                page: 1, //页数
                 count: 0, //文章总数
                 judge: false //判断全部还是分类
             };
@@ -119,7 +121,31 @@
             Editor
         },
 
-        computed: {},
+        computed: {
+            getActicleClass() {     //文章类型计算
+                return function (res) {
+                    switch (res) {
+                        case 1:
+                            return '行业资讯'
+                        case 2:
+                            return '申立德动态'
+                        case 3:
+                            return '学术交流'
+                    }
+                }
+            },
+            changeTime() {      //时间GMT转换
+                return function (time) {
+                    let date = new Date(time)
+                    let Str = date.getUTCFullYear() + '-' +
+                        (date.getMonth() + 1) + '-' +
+                        date.getDate() + ' ' +
+                        date.getHours() + ':' +
+                        date.getMinutes()
+                    return Str
+                }
+            }
+        },
 
         beforeMount() {},
 
@@ -150,7 +176,7 @@
                 }
             },
             handleCurrentChange(val) {
-                this.page = val - 1;
+                this.page = val;
                 if (this.judge) {
                     this.getArticleCategory();
                 } else {
@@ -160,7 +186,7 @@
             //删除文章
             articleDelect(row) {
                 var id = row.id;
-                this.axios.delete('/api/news' + id, config).then((res) => {
+                this.axios.delete('/api/news/' + id, config).then((res) => {
                     if (res.status == 200) {
                         this.$message({
                             message: '删除成功',
@@ -212,8 +238,8 @@
             /**
              * 监听this.dialogArticle 是否为false,当从true变成false时，重新获取数据
              */
-            dialogArticle(){
-                if(!this.dialogArticle){
+            dialogArticle() {
+                if (!this.dialogArticle) {
                     this.getArticleData();
                 }
             }

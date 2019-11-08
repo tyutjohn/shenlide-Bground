@@ -1,7 +1,7 @@
 <!--
  * @Author: johnwang
  * @since: 2019-11-02 20:11:45
- * @lastTime: 2019-11-07 15:02:28
+ * @lastTime: 2019-11-09 01:31:52
  * @LastAuthor: Do not edit
  * @Github: https://github.com/tyutjohn
  -->
@@ -60,11 +60,7 @@
 </style>
 
 <script>
-  const config = {
-    headers: {
-      'Authorization': "bearer " + sessionStorage.getItem('userToken')
-    }
-  }
+  import qs from 'qs'
   import {
     Loading
   } from 'element-ui';
@@ -88,7 +84,14 @@
     methods: {
       //退出登陆
       logOut() {
-        this.axios.post('/api/admin/logout',config).then(res => {
+        let param = qs.stringify({
+          id:'1'
+        });
+        this.axios.post('/api/admin/logout', param,{
+          headers: {
+            'Authorization': "bearer " + sessionStorage.getItem('userToken')
+          }
+        }).then(res => {
           if (res.status == 200) {
             Loading.service({
               fullscreen: true,
@@ -97,7 +100,7 @@
             sessionStorage.clear();
             setTimeout(() => {
               this.$router.push({
-                path: '/Home'
+                path: '/Login'
               })
               Loading.service().close();
             }, 1000)

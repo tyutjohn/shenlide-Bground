@@ -1,7 +1,7 @@
 <!--
  * @Author: johnwang
  * @since: 2019-11-02 10:42:43
- * @lastTime: 2019-11-06 10:50:02
+ * @lastTime: 2019-11-08 22:36:25
  * @LastAuthor: Do not edit
  * @Github: https://github.com/tyutjohn
  -->
@@ -20,7 +20,8 @@
                 <el-input v-model="formlogin.username" style="width:80%" @keyup.enter.native="nextFocus()"></el-input>
               </el-form-item>
               <el-form-item label="密码">
-                <el-input v-model="formlogin.password" style="width:80%" @keyup.enter.native="login()" id="password" show-password>
+                <el-input v-model="formlogin.password" style="width:80%" @keyup.enter.native="login()" id="password"
+                  show-password>
                 </el-input>
               </el-form-item>
               <el-button type="primary" class="button"
@@ -74,6 +75,7 @@
   import {
     Loading
   } from 'element-ui';
+  import qs from 'qs';
   export default {
     data() {
       return {
@@ -98,36 +100,30 @@
     methods: {
       //登陆账号
       login() {
-        this.axios.post('/api/admin/login', {
-          username: this.formlogin.username,
-          password: this.formlogin.password
-        }).then(res => {
-          if (res.status == 200) {
-            Loading.service({
-              fullscreen: true,
-              text: '登陆成功，正在跳转'
-            });
-            setTimeout(() => {
-              //将用户名和token放入sessionStorage
-              sessionStorage.setItem("userName", this.formlogin.username);
-              sessionStorage.setItem("userToken", res.data.token);
-              //将信息存入vuex
-              this.$store.dispatch("setUser", this.formlogin.username);
-              this.$store.dispatch("setToken", res.data.token);
-              this.$router.push({
-                path: '/Home'
-              })
-              Loading.service().close();
-            }, 1000);
-          }
-        }).catch(err => {
-          if (err.response.status == 404) {
-            this.$message.error(err.response.data.email)
-          } else if (err.response.status == 400) {
-            this.$message.error(err.response.data.password)
-          } else {
-            this.$message.error(err.message)
-          }
+        let param=qs.stringify({
+          username:this.formlogin.username,
+          password:this.formlogin.password
+        })
+        this.axios.post('/api/admin/login',param).then(res => {
+            if (res.data) {
+              Loading.service({
+                fullscreen: true,
+                text: '登陆成功，正在跳转'
+              });
+              setTimeout(() => {
+                //将用户名和token放入sessionStorage
+                sessionStorage.setItem("userName", this.formlogin.username);
+                sessionStorage.setItem("userToken", res.data.token);
+                this.$router.push({
+                  path: '/Home'
+                })
+                Loading.service().close();
+              }, 1000);
+            }else{
+              this.$message.error('用户名或密码错误')
+            }
+          }).catch(err => {
+            this.$message.error(err);
         })
       },
       //回车焦点跳转

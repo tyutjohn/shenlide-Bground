@@ -1,7 +1,7 @@
 <!--
  * @Author: johnwang
  * @since: 2019-11-06 08:25:09
- * @lastTime: 2019-11-07 20:21:39
+ * @lastTime: 2019-11-09 01:12:37
  * @LastAuthor: Do not edit
  * @Github: https://github.com/tyutjohn
  -->
@@ -24,15 +24,16 @@
             <el-table-column prop="remark" label="备注" width="200">
             </el-table-column>
             <el-table-column prop="status" label="状态" width="100"
-                :filters="[{ text: '已联系', value: '1' }, { text: '未联系', value: '0' }]" :filter-method="filterTag"
+                :filters="[{ text: '已联系', value: 1 }, { text: '未联系', value: 0 }]" :filter-method="filterTag"
                 filter-placement="bottom-end">
                 <template slot-scope="scope">
-                    <el-tag :type="scope.row.status === '1' ? 'success' : 'warning'" disable-transitions>
+                    <el-tag :type="scope.row.status === 1 ? 'success' : 'warning'" disable-transitions>
                         {{getStatus(scope.row.status)}}
                     </el-tag>
                 </template>
             </el-table-column>
-            <el-table-column prop="create_time" label="资讯时间" width="100" sortable>
+            <el-table-column label="资讯时间" width="150" sortable>
+                <template slot-scope="scope">{{changeTime(scope.row.create_time)}}</template>
             </el-table-column>
             <el-table-column label="操作">
                 <template slot-scope="scope">
@@ -70,7 +71,7 @@
         </el-dialog>
         <div class="client-bottom">
             <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-                :current-page="currentPage" :page-sizes="[10, 20, 50, 100]" :page-size="10"
+                :current-page="currentPage" :page-sizes="[5, 10, 20, 50]" :page-size="5"
                 layout="total, sizes, prev, pager, next, jumper" :total="count">
             </el-pagination>
         </div>
@@ -100,14 +101,15 @@
             'Authorization': "bearer " + sessionStorage.getItem('userToken')
         }
     }
+    import qs from 'qs'
     export default {
         data() {
             return {
                 clientData: [], //客户列表
                 currentPage: 1, //当前页数
-                count:0,   //客户总数
-                size: '', //每页条数
-                page: '', //页数
+                count: 0, //客户总数
+                size: 5, //每页条数
+                page: 1, //页数
                 dialogFormVisible: false, //修改客户外层
                 clientForm: { //修改客户表单
                     tel: '',
@@ -124,14 +126,25 @@
         components: {},
 
         computed: {
-            getStatus() {
+            getStatus() { //状态计算
                 return function (res) {
                     switch (res) {
-                        case '1':
+                        case 1:
                             return '已联系';
-                        case '0':
+                        case 0:
                             return '未联系';
                     }
+                }
+            },
+            changeTime() { //时间GMT转换
+                return function (time) {
+                    let date = new Date(time)
+                    let Str = date.getUTCFullYear() + '-' +
+                        (date.getMonth() + 1) + '-' +
+                        date.getDate() + ' ' +
+                        date.getHours() + ':' +
+                        date.getMinutes()
+                    return Str
                 }
             }
         },
@@ -149,10 +162,12 @@
             },
             //分页
             handleSizeChange(val) {
-                console.log(`每页 ${val} 条`);
+                this.size = val;
+                this.getClient();
             },
             handleCurrentChange(val) {
-                console.log(`当前页: ${val}`);
+                this.page = val;
+                this.getClient();
             },
             //修改客户信息
             clientUpdate(row) {
@@ -166,14 +181,14 @@
             },
             //确定修改
             clientConfirm() {
-                var id = this.clientForm.id;
-                this.axios.put('/api/customer/' + id, {
+                let param = qs.stringify({
                     tel: this.clientForm.tel,
                     intention: this.clientForm.intention,
                     name: this.clientForm.name,
                     remark: this.clientForm.remark,
                     status: this.clientForm.status
-                },config).then((res) => {
+                });
+                this.axios.put('/api/customer/' +this.clientForm.id,param,config).then((res) => {
                     if (res.status == 200) {
                         this.$message({
                             message: '修改成功',
@@ -194,7 +209,7 @@
                     type: 'warning'
                 }).then(() => {
                     var id = row.id;
-                    this.axios.delete('/api/customer/' + id,config).then(res => {
+                    this.axios.delete('/api/customer/' + id, config).then(res => {
                         if (res.status == 200) {
                             this.$message({
                                 type: 'success',
@@ -214,17 +229,19 @@
             },
             //获取客户列表
             getClient() {
-                this.axios.get('/api/customer',{
-                    params:{
-                        page:this.page,
-                        size:this.size
+                this.axios.get('/api/customer', {
+                    params: {
+                        page: this.page,
+                        size: this.size,
                     },
-                    config
+                    headers: {
+                        'Authorization': "bearer " + sessionStorage.getItem('userToken')
+                    }
                 }).then(res => {
-                    if(res.status==200){
-                        this.clientData=res.data.customers;
-                        this.count=res.data.count;
-                    }else{
+                    if (res.status == 200) {
+                        this.clientData = res.data.customers;
+                        this.count = res.data.count;
+                    } else {
                         this.$message.error('获取服务器数据失败');
                     }
                 })

@@ -1,7 +1,7 @@
 <!--
  * @Author: johnwang
  * @since: 2019-11-03 22:13:06
- * @lastTime: 2019-11-07 15:26:39
+ * @lastTime: 2019-11-09 01:25:19
  * @LastAuthor: Do not edit
  * @Github: https://github.com/tyutjohn
  -->
@@ -49,7 +49,7 @@
         <el-table-column prop="create_time" label="注册时间">
           <template slot-scope="scope">
             <i class="el-icon-time"></i>
-            <span style="margin-left: 10px">{{ scope.row.create_time }}</span>
+            <span style="margin-left: 10px">{{ changeTime(scope.row.create_time) }}</span>
           </template>
         </el-table-column>
         <el-table-column fixed="right" label="操作" width="300">
@@ -116,6 +116,7 @@
       'Authorization': "bearer " + sessionStorage.getItem('userToken')
     }
   }
+  import qs from 'qs'
   export default {
     data() {
       var validatePass = (rule, value, callback) => { //验证密码
@@ -172,21 +173,34 @@
 
     components: {},
 
-    computed: {},
+    computed: {
+      changeTime() { //时间GMT转换
+        return function (time) {
+          let date = new Date(time)
+          let Str = date.getUTCFullYear() + '-' +
+            (date.getMonth() + 1) + '-' +
+            date.getDate() + ' ' +
+            date.getHours() + ':' +
+            date.getMinutes()
+          return Str
+        }
+      }
+    },
 
     beforeMount() {},
 
     mounted() {
-      this.getAdmin();  //  获取管理员列表
+      this.getAdmin(); //  获取管理员列表
     },
 
     methods: {
       addAdmin() { //添加管理员
-        this.axios.post('/api/admin', {
+        let param = qs.stringify({
           username: this.form.username,
           password: this.form.password,
           nickname: this.form.nickname
-        }, config).then(res => {
+        });
+        this.axios.post('/api/admin', param, config).then(res => {
           if (res.status == 200) {
             this.$message({
               message: '注册成功',
@@ -204,16 +218,19 @@
         this.username = row.username;
         this.formPass.nickname = row.nickname
       },
-      updateConfirm() {   //修改请求接口
-        this.axios.put('/api/admin/' + this.username, {
+      updateConfirm() { //修改请求接口
+        let param = qs.stringify({
           password: this.formPass.password,
-          nickname:this.formPass.nickname
-        },config).then(res => {
+          nickname: this.formPass.nickname
+        });
+        this.axios.put('/api/admin/' + this.username, param, config).then(res => {
           if (res.status == 200) {
             this.$message({
               message: '修改成功',
               type: 'success'
             })
+            this.formPass.password = '';
+            this.formPass.password2 = '';
             setTimeout(() => {
               this.dialogPassword = false;
               this.getAdmin();
@@ -230,7 +247,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.axios.delete('/api/admin/' + this.username,config).then(res => {
+          this.axios.delete('/api/admin/' + this.username, config).then(res => {
             if (res.status == 200) {
               this.$message({
                 type: 'success',
@@ -250,10 +267,10 @@
       },
       //获取管理员列表
       getAdmin() {
-        this.axios.get('/api/admin',config).then(res => {
-          if(res.status==200){
-            this.userData=res.data;
-          }else{
+        this.axios.get('/api/admin', config).then(res => {
+          if (res.status == 200) {
+            this.userData = res.data;
+          } else {
             this.$message.error('获取服务器数据失败');
           }
         })

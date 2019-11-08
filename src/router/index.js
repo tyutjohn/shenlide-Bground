@@ -1,7 +1,7 @@
 /*
  * @Author: johnwang
  * @since: 2019-11-02 00:29:39
- * @lastTime: 2019-11-07 21:44:46
+ * @lastTime: 2019-11-08 23:00:36
  * @LastAuthor: Do not edit
  * @Github: https://github.com/tyutjohn
  */
@@ -80,24 +80,20 @@ const router = new VueRouter({
 /**
  * 路由拦截器
  */
-router.beforeEach((to,from,next)=>{
-  if(to.meta.auth){
-    if(window.sessionStorage.getItem('userToken')){
-      if(window.sessionStorage.getItem('userToken')==this.$store.state.token){
-        next();
-      }else{
-        next({
-          path:'/Login'
-        })
-      }
-    }else{
-      next({
-        path:'/Login'
-      })
-    }
-  }else{
-    next()
-  }
-})
+// router.beforeEach((to,from,next)=>{
+//   if(to.meta.auth){
+//     if(window.sessionStorage.getItem('userToken')){
+//         next({
+//           path:'/Login'
+//         })
+//     }else{
+//       next({
+//         path:'/Login'
+//       })
+//     }
+//   }else{
+//     next()
+//   }
+// })
 
 export default router
