@@ -1,7 +1,7 @@
 <!--
  * @Author: johnwang
  * @since: 2019-11-06 08:25:09
- * @lastTime: 2019-11-09 01:12:37
+ * @lastTime: 2019-11-10 00:10:25
  * @LastAuthor: Do not edit
  * @Github: https://github.com/tyutjohn
  -->
@@ -142,8 +142,8 @@
                     let Str = date.getUTCFullYear() + '-' +
                         (date.getMonth() + 1) + '-' +
                         date.getDate() + ' ' +
-                        date.getHours() + ':' +
-                        date.getMinutes()
+                        date.getUTCHours() + ':' +
+                        date.getUTCMinutes()
                     return Str
                 }
             }
@@ -188,7 +188,7 @@
                     remark: this.clientForm.remark,
                     status: this.clientForm.status
                 });
-                this.axios.put('/api/customer/' +this.clientForm.id,param,config).then((res) => {
+                this.axios.put('/api/customer/' + this.clientForm.id, param, config).then((res) => {
                     if (res.status == 200) {
                         this.$message({
                             message: '修改成功',

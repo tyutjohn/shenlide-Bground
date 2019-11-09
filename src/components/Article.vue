@@ -1,7 +1,7 @@
 <!--
  * @Author: johnwang
  * @since: 2019-11-05 21:49:54
- * @lastTime: 2019-11-09 01:05:46
+ * @lastTime: 2019-11-10 00:10:13
  * @LastAuthor: Do not edit
  * @Github: https://github.com/tyutjohn
  -->
@@ -122,7 +122,7 @@
         },
 
         computed: {
-            getActicleClass() {     //文章类型计算
+            getActicleClass() { //文章类型计算
                 return function (res) {
                     switch (res) {
                         case 1:
@@ -134,14 +134,14 @@
                     }
                 }
             },
-            changeTime() {      //时间GMT转换
+            changeTime() { //时间GMT转换
                 return function (time) {
                     let date = new Date(time)
                     let Str = date.getUTCFullYear() + '-' +
                         (date.getMonth() + 1) + '-' +
                         date.getDate() + ' ' +
-                        date.getHours() + ':' +
-                        date.getMinutes()
+                        date.getUTCHours() + ':' +
+                        date.getUTCMinutes()
                     return Str
                 }
             }

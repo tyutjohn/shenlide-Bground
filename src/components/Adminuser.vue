@@ -1,7 +1,7 @@
 <!--
  * @Author: johnwang
  * @since: 2019-11-03 22:13:06
- * @lastTime: 2019-11-09 01:25:19
+ * @lastTime: 2019-11-10 00:13:23
  * @LastAuthor: Do not edit
  * @Github: https://github.com/tyutjohn
  -->
@@ -178,10 +178,10 @@
         return function (time) {
           let date = new Date(time)
           let Str = date.getUTCFullYear() + '-' +
-            (date.getMonth() + 1) + '-' +
-            date.getDate() + ' ' +
-            date.getHours() + ':' +
-            date.getMinutes()
+            (date.getUTCMonth() + 1) + '-' +
+            date.getUTCDate() + ' ' +
+            date.getUTCHours()+':'+
+            date.getUTCMinutes()
           return Str
         }
       }
