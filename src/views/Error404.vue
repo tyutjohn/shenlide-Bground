@@ -1,13 +1,13 @@
 <!--
  * @Author: johnwang
  * @since: 2019-11-07 21:19:13
- * @lastTime: 2019-11-07 21:34:55
+ * @lastTime: 2019-11-09 09:11:43
  * @LastAuthor: Do not edit
  * @Github: https://github.com/tyutjohn
  -->
 <template>
   <div style="width:100%;height:100%">
-    <div class="text">
+    <div class="text1">
       <p>真抱歉，您访问的页面走丢了</p>
       <img :src="bgSrc">
     </div>
@@ -17,7 +17,7 @@
   </div>
 </template>
 <style>
-  .text {
+  .text1 {
     color: #666465;
     font-size: 2em;
     text-align: center;

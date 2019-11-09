@@ -1,7 +1,7 @@
 /*
  * @Author: johnwang
  * @since: 2019-11-02 16:21:40
- * @lastTime: 2019-11-08 22:59:04
+ * @lastTime: 2019-11-09 09:00:40
  * @LastAuthor: Do not edit
  * @Github: https://github.com/tyutjohn
  */
@@ -11,6 +11,9 @@ const getters={
     },
     isLogin(state){
         return state.isLogin
+    },
+    getUsername(state){
+        return state.username
     },
     getTitle(state){
         return state.article.title

@@ -1,7 +1,7 @@
 /*
  * @Author: johnwang
  * @since: 2019-11-02 00:29:39
- * @lastTime: 2019-11-08 23:00:36
+ * @lastTime: 2019-11-09 09:46:28
  * @LastAuthor: Do not edit
  * @Github: https://github.com/tyutjohn
  */
@@ -14,6 +14,7 @@ import Adminuser from '../components/Adminuser'
 import Article from '../components/Article'
 import Client from '../components/Client'
 import Error404 from '../views/Error404'
+import store from '../store/index'
 
 Vue.use(VueRouter)
 
@@ -78,22 +79,33 @@ const router = new VueRouter({
 })
 
 /**
+ * 页面刷新，判断之前是否登陆
+ */
+if(window.sessionStorage.getItem('isLogin')){
+  store.dispatch('setAdmin',window.sessionStorage.getItem('userName'))
+}
+
+/**
  * 路由拦截器
  */
-// router.beforeEach((to,from,next)=>{
-//   if(to.meta.auth){
-//     if(window.sessionStorage.getItem('userToken')){
-//         next({
-//           path:'/Login'
-//         })
-//     }else{
-//       next({
-//         path:'/Login'
-//       })
-//     }
-//   }else{
-//     next()
-//   }
-// })
+router.beforeEach((to,from,next)=>{
+  if(to.meta.auth){
+    if(window.sessionStorage.getItem('userToken')){
+      if(window.sessionStorage.getItem('userName')==store.getters.getUsername){
+        next();
+      }else{
+        next({
+          path:'/login'
+        })
+      }
+    }else{
+      next({
+        path:'/login'
+      })
+    }
+  }else{
+    next()
+  }
+})
 
 export default router

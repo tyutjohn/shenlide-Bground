@@ -1,7 +1,7 @@
 /*
  * @Author: johnwang
  * @since: 2019-11-02 16:21:52
- * @lastTime: 2019-11-06 10:00:37
+ * @lastTime: 2019-11-09 09:00:09
  * @LastAuthor: Do not edit
  * @Github: https://github.com/tyutjohn
  */
@@ -17,6 +17,9 @@ const mutations={
             state.isLogin=false;
             state.token="";
         }
+    },
+    usernameStatus(state,username){
+        state.username=username
     },
     titleStatus(state,title){
         state.article.title=title

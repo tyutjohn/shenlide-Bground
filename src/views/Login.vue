@@ -1,7 +1,7 @@
 <!--
  * @Author: johnwang
  * @since: 2019-11-02 10:42:43
- * @lastTime: 2019-11-08 22:36:25
+ * @lastTime: 2019-11-09 09:39:27
  * @LastAuthor: Do not edit
  * @Github: https://github.com/tyutjohn
  -->
@@ -114,6 +114,9 @@
                 //将用户名和token放入sessionStorage
                 sessionStorage.setItem("userName", this.formlogin.username);
                 sessionStorage.setItem("userToken", res.data.token);
+                sessionStorage.setItem("isLogin",true);
+                //传入vuex
+                this.$store.dispatch('setAdmin',this.formlogin.username);
                 this.$router.push({
                   path: '/Home'
                 })

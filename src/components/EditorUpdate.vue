@@ -44,7 +44,7 @@
     border: 1px solid #ccc;
   }
 
-  .text {
+  .edit .text {
     border: 1px solid #ccc;
     min-height: 500px;
   }

@@ -1,7 +1,7 @@
 <!--
  * @Author: johnwang
  * @since: 2019-11-02 19:37:58
- * @lastTime: 2019-11-06 10:53:45
+ * @lastTime: 2019-11-09 09:20:45
  * @LastAuthor: Do not edit
  * @Github: https://github.com/tyutjohn
  -->
@@ -114,6 +114,11 @@
 <script>
     import Header from '../components/Header'
     import Bottom from '../components/Bottom'
+    const config = {
+        headers: {
+            'Authorization': "bearer " + sessionStorage.getItem('userToken')
+        }
+    }
     export default {
         data() {
             return {
@@ -136,24 +141,19 @@
 
         computed: {},
 
-        beforeMount() {},
+        beforeMount() {
+             this.user.userName = this.$store.state.username;
+        },
 
         mounted() {
-            // this.getUser();
+            this.getUser();
         },
 
         methods: {
             //token验证获取用户信息
             getUser() {
-                const token = sessionStorage.getItem("userToken");
-                this.axios.get('/api/token/'+token, {
-                    headers: {
-                        Authorization: token
-                    }
-                }).then(res => {
-                    //TODO
-                    console.log(res);
-                    this.user.userName=sessionStorage.getItem("userName")
+                this.axios.get('/api/admin/' + this.user.userName,config).then(res => {
+                    this.user.userName = res.data.nickname
                 })
             },
             handleOpen(key, keyPath) {
