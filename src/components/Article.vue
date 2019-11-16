@@ -25,12 +25,14 @@
         </div>
         <div class="article-data">
             <el-table :data="articleData" style="width: 100%;padding:0 20px">
-                <el-table-column prop="title" label="标题" width="400">
+                <el-table-column prop="title" label="标题" width="200">
                 </el-table-column>
                 <el-table-column label="类型" width="150">
                     <template slot-scope="scope">{{getActicleClass(scope.row.category)}}</template>
                 </el-table-column>
-                <el-table-column prop="author" label="作者" width="150">
+                <el-table-column prop="author" label="作者" width="100">
+                </el-table-column>
+                <el-table-column prop="synopsis" label="简介" width="500">
                 </el-table-column>
                 <el-table-column label="发布时间" width="200" sortable>
                     <template slot-scope="scope">{{changeTime(scope.row.create_time)}}</template>
@@ -163,6 +165,7 @@
                 this.$store.dispatch('setArticleName', row.author);
                 this.$store.dispatch('setArticleContent', row.content);
                 this.$store.dispatch('setArticleId', row.id)
+                this.$store.dispatch('setArticleSynopsis',row.synopsis)
                     //重加载组件
                     ++this.menuKey
             },
@@ -206,6 +209,7 @@
                         page: this.page
                     }
                 }).then((res) => {
+                    console.log(res)
                     if (res.status == 200) {
                         this.articleData = res.data.news;
                         this.count = res.data.count;

@@ -12,6 +12,9 @@
         </div>
       </div>
     </div>
+    <div class="editor-jianjie">
+      <el-input placeholder="请输入文章简介" suffix-icon="el-icon-article" type="textarea" v-model="article.synopsis"></el-input>
+    </div>
     <div class="editor-bottom felx">
       <el-input placeholder="请输入新闻标题" suffix-icon="el-icon-document" v-model="article.title" style="width:250px">
       </el-input>
@@ -63,6 +66,10 @@
     justify-content: space-around;
     padding-bottom: 20px;
   }
+
+  .editor-jianjie{
+    padding:20px;
+  }
 </style>
 
 <script>
@@ -83,7 +90,8 @@
           title: '', //标题
           articleClass: '', //类别
           name: '', //发布者
-          id: '' //文章id
+          id: '' ,//文章id
+          synopsis:'' //文章简介
         }
       };
     },
@@ -156,7 +164,8 @@
           title: this.article.title,
           category: this.article.articleClass,
           author: this.article.name,
-          content: this.info_
+          content: this.info_,
+          synopsis:this.article.synopsis
         });
         this.axios.put('/api/news/' + this.article.id,param,config).then(res => {
           if (res.status == '200') {
@@ -175,6 +184,7 @@
         this.article.title = this.$store.state.article.title;
         this.article.articleClass = this.$store.state.article.class;
         this.article.id = this.$store.state.article.id;
+        this.article.synopsis=this.$store.state.article.synopsis;
       },
       //获取content内容
       getArticleContent(){

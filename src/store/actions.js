@@ -26,6 +26,9 @@ const actions ={
     },
     setArticleId({commit},id){
         commit('idStatus',id)
+    },
+    setArticleSynopsis({commit},id){
+        commit('synopsisStatus',id)
     }
 }
 

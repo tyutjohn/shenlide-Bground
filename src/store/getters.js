@@ -29,6 +29,9 @@ const getters={
     },
     getId(state){
         return state.article.id
+    },
+    getSynopsis(state){
+        return state.article.synopsis
     }
 }
 

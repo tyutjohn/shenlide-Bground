@@ -19,6 +19,9 @@
         </div>
       </div>
     </div>
+    <div class="editor-jianjie">
+      <el-input placeholder="请输入文章简介" suffix-icon="el-icon-article" type="textarea" v-model="synopsis"></el-input>
+    </div>
     <div class="editor-bottom felx">
       <el-input placeholder="请输入新闻标题" suffix-icon="el-icon-document" v-model="title" style="width:250px">
       </el-input>
@@ -73,6 +76,10 @@
     justify-content: space-around;
     padding-bottom: 20px;
   }
+
+  .editor-jianjie{
+    padding:20px;
+  }
 </style>
 
 <script>
@@ -95,6 +102,7 @@
         title: '', //标题
         articleClass: '', //类别
         name: '', //发布者
+        synopsis:'',//简介
       };
     },
     model: {
@@ -163,10 +171,10 @@
           title: this.title,
           category: this.articleClass,
           author: this.name,
-          content: this.info_
+          content: this.info_,
+          synopsis:this.synopsis
         });
         this.axios.post('/api/news',param,config).then(res => {
-          console.log(res)
           if (res.data) {
             Loading.service({
               fullscreen: true,

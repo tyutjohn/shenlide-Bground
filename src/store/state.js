@@ -15,7 +15,8 @@ const state = {
         class: '',
         name: '',
         content: '',
-        id:''
+        id:'',
+        synopsis:''
     }
 }
 

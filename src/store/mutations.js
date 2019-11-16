@@ -35,6 +35,9 @@ const mutations={
     },
     idStatus(state,id){
         state.article.id=id
+    },
+    synopsisStatus(state,synopsis){
+        state.article.synopsis=synopsis
     }
 }
 
