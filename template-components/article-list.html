@@ -25,6 +25,12 @@
             display: flex;
             justify-content: space-between;
         }
+
+        @media screen and (max-width:580px){
+            .list-content{
+                font-size:10px;
+            }
+        }
     </style>
 </head>
 
@@ -33,7 +39,8 @@
         <el-tabs v-model="activeName" @tab-click="handleClick" class="article-list">
             <el-tab-pane label="行业资讯" name="first">
                 <el-card v-for="item in articleList" shadow="hover">
-                    <p>{{item.title}}</p>
+                    <p style="padding:0;margin:0">{{item.title}}</p>
+                    <p>{{item.synopsis}}</p>
                     <div class="list-content">
                         <div>
                             <i class="el-icon-time"></i>{{item.create_time}}
@@ -50,7 +57,8 @@
             </el-tab-pane>
             <el-tab-pane label="申立德动态" name="second">
                 <el-card v-for="item in articleList" shadow="hover">
-                    <p>{{item.title}}</p>
+                    <p style="padding:0;margin:0">{{item.title}}</p>
+                    <p>{{item.synopsis}}</p>
                     <div class="list-content">
                         <div>
                             <i class="el-icon-time"></i>{{item.create_time}}
@@ -67,7 +75,8 @@
             </el-tab-pane>
             <el-tab-pane label="学术交流" name="third">
                 <el-card v-for="item in articleList" shadow="hover">
-                    <p>{{item.title}}</p>
+                    <p style="padding:0;margin:0">{{item.title}}</p>
+                    <p>{{item.synopsis}}</p>
                     <div class="list-content">
                         <div>
                             <i class="el-icon-time"></i>{{item.create_time}}
@@ -96,11 +105,13 @@
                 activeName: 'first',
                 articleList: [{
                     title: '文章标题', //标题
+                    synopsis:'这是文章简介，有好多内容',//简介
                     author: '小王', //作者
                     category: '1', //类别
                     create_time: '2019-11-01', //发布时间
                 }, {
                     title: '第二篇文章', //标题
+                    synopsis:'大家好，今天给大家带来的是我们公司新的产品',//简介
                     author: '小张', //作者
                     category: '2', //类别
                     create_time: '2019-11-01', //发布时间
