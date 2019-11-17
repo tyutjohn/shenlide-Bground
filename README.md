@@ -45,7 +45,9 @@ server{
         root /var/www/html/shenlideBground;     //nginx服务器目录
         index index.html;
         server_name 填写域名;                   //填写你的域名，如test.com
-        location / {}
+        location / {
+            error_page 404 /index.html          //vue-cli3项目40
+        }
         location ^~ /api/{
             proxy_pass http://127.0.0.1:3000/api/;      //后台代理地址
         }

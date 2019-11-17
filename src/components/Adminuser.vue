@@ -180,7 +180,7 @@
           let Str = date.getUTCFullYear() + '-' +
             (date.getUTCMonth() + 1) + '-' +
             date.getUTCDate() + ' ' +
-            date.getUTCHours()+':'+
+            date.getUTCHours() + ':' +
             date.getUTCMinutes()
           return Str
         }
@@ -202,12 +202,16 @@
         });
         this.axios.post('/api/admin', param, config).then(res => {
           if (res.status == 200) {
-            this.$message({
-              message: '注册成功',
-              type: 'success'
-            });
+            if (res.data) {
+              this.$message({
+                message: '注册成功',
+                type: 'success'
+              });
             this.dialogFormVisible = false;
             this.getAdmin();
+            }else{
+              this.$message.error('用户名已存在或权限不足')
+            }
           } else {
             this.$message.error('注册失败')
           }
@@ -249,10 +253,14 @@
         }).then(() => {
           this.axios.delete('/api/admin/' + this.username, config).then(res => {
             if (res.status == 200) {
-              this.$message({
-                type: 'success',
-                message: '删除成功!'
-              });
+              if (res.data) {
+                this.$message({
+                  type: 'success',
+                  message: '删除成功'
+                });
+              } else {
+                this.$message.error('您没有删除其他管理员的权限')
+              }
               this.getAdmin();
             } else {
               this.$message.error('删除失败')
