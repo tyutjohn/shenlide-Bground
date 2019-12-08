@@ -26,6 +26,22 @@
             margin: 0 auto;
             height: 100%;
             background: #ffffff;
+            border: 1px #dddddd solid;
+            padding: 10px 66px 38px 66px;
+        }
+
+        .BreadcrumbNav {
+            line-height: 44px;
+            height: 44px;
+            font-size: 12px;
+            font-family: "宋体";
+            color: #000;
+        }
+
+        .BreadcrumbNav a {
+            display: inline;
+            color: #3498db;
+            text-decoration: none;
         }
 
         .article-header {
@@ -35,23 +51,24 @@
         }
 
         .article-header .title {
-            max-width: 640px;
-            white-space: nowrap;
-            overflow: hidden;
-            font-size: 20px;
             color: #2c3e50;
-            font-weight: bold;
-            height: 30px;
+            line-height: 56px;
+            font-family: "微软雅黑", "宋体";
+            font-size: 38px;
+            text-align: center;
+            padding: 26px 0 26px 0;
+            font-weight: normal;
+            margin: 0 auto;
         }
 
         .header-infor {
             display: flex;
-            justify-content: flex-start;
+            justify-content: space-between;
         }
 
         .header-infor-p {
             margin-right: 20px;
-            color: #b8c4ce
+            color: #666
         }
 
         .article-content {
@@ -70,12 +87,13 @@
             justify-content: space-between;
             color: #b8c4ce;
             height: 30px;
-            margin-top:10px;
+            margin-top: 10px;
         }
 
         @media screen and (max-width:580px) {
             .article {
                 width: 96%;
+                padding: 10px 0px 38px 10px;
             }
 
             .article-header {
@@ -108,19 +126,22 @@
 <body>
     <div id="app">
         <div class="article">
+            <div class="BreadcrumbNav">
+                <a href="#">首页</a>&nbsp;&gt;&nbsp;
+                <a href="#">{{getClassName(articleData.category)}}</a>
+            </div>
             <div class="article-header">
-                <p class="title"><strong>{{articleData.title}}</strong></p>
+                <p class="title">{{articleData.title}}</p>
                 <div class="header-infor">
-                    <div class="header-infor-p" style="color:#34495e">原创文章</div>
                     <div class="header-infor-p">
-                        分类:<a style="display: inline;color:#3498db;text-decoration: none;"
-                            href="#">{{getClassName(articleData.category)}}</a>
+                        <i class="el-icon-time" style="color:#666"></i>
+                        <p style="color:#666;display:inline">{{articleData.create_time}}&nbsp;&nbsp;&nbsp;&nbsp;来源:{{articleData.author}}</p>
                     </div>
-                    <div class="header-infor-p">版权:申立德</div>
-                </div>
-                <div style="margin-top:6px">
-                    <i class="el-icon-time" style="color:#9aabb8"></i>
-                    <p style="color:#9aabb8;display:inline">{{articleData.create_time}}</p>
+                    <div class="header-infor">
+                        <div style="cursor:pointer">【 字体: <span>大</span>&nbsp;<span>中</span>&nbsp;<span>小</span> 】</div>
+                        <div @click="print" style="cursor:pointer"><i class="el-icon-printer"></i> 打印</div>
+                        <div><i class="el-icon-link"></i><img src="#"/></div>
+                    </div>
                 </div>
             </div>
             <el-divider></el-divider>
@@ -164,14 +185,17 @@
             },
             methods: {
                 //获取文章数据
-                getArticle(){
-                    axios.get('/api/news/'+id).then(res=>{
-                        if(res.status==200){
-                            this.articleData=res.data;
-                        }else{
+                getArticle() {
+                    axios.get('/api/news/' + id).then(res => {
+                        if (res.status == 200) {
+                            this.articleData = res.data;
+                        } else {
                             this.$message.error('网络异常');
                         }
                     })
+                },
+                print(){
+                    window.print()
                 }
 
             },
