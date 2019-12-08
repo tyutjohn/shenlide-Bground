@@ -8,7 +8,7 @@
 module.exports={
     devServer:{
         host:'localhost',
-        port:8080,
+        port:8081,
         proxy:{
             '/api':{
                 target:'http://123.206.65.183:9027/api/',

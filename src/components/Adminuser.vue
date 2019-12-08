@@ -6,7 +6,7 @@
  * @Github: https://github.com/tyutjohn
  -->
 <template>
-  <div>
+  <div :style="height" style="overflow:auto">
     <div class="admin-header">
       <el-breadcrumb separator="/" class="admin-header-crumb">
         <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
@@ -167,7 +167,10 @@
             validator: validatePass2,
             trigger: 'blur'
           }]
-        }
+        },
+        height: {
+          height: document.body.scrollHeight-102+ 'px'
+        },
       };
     },
 

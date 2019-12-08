@@ -1,23 +1,23 @@
 <template>
   <div class="editor">
+    <div class="editor-jianjie"> 
+      标题:<el-input placeholder="请输入标题" suffix-icon="el-icon-document" v-model="article.title" style="width:500px;margin-bottom:20px;font-size:26px">
+      </el-input>
+      <el-input placeholder="请输入文章简介" suffix-icon="el-icon-article" type="textarea" v-model="article.synopsis"></el-input>
+    </div>
     <div class="editor-main">
       <div style="width:100%">
         <div class="edit">
           <el-divider content-position="center">编辑区</el-divider>
           <div ref="toolbar" class="toolbar">
           </div>
-          <div style="padding: 5px 0; color: #ccc">中间隔离带</div>
+          <div style="padding: 5px 0; color: #ccc">正文内容</div>
           <div ref="editor" class="text">
           </div>
         </div>
       </div>
     </div>
-    <div class="editor-jianjie">
-      <el-input placeholder="请输入文章简介" suffix-icon="el-icon-article" type="textarea" v-model="article.synopsis"></el-input>
-    </div>
     <div class="editor-bottom felx">
-      <el-input placeholder="请输入新闻标题" suffix-icon="el-icon-document" v-model="article.title" style="width:250px">
-      </el-input>
       <el-select v-model="article.articleClass" placeholder="请选择发布类别" style="width:200px">
         <el-option label="行业资讯" value="1"></el-option>
         <el-option label="申立德动态" value="2"></el-option>

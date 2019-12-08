@@ -6,7 +6,7 @@
  * @Github: https://github.com/tyutjohn
  -->
 <template>
-    <div class="article">
+    <div class="article" :style="height">
         <div class="article-header">
             <div class="header-left">
                 <el-breadcrumb separator="/">
@@ -60,6 +60,7 @@
     .article {
         width: 100%;
         background: #f1f2f4;
+        overflow: auto;
     }
 
     .article-data {
@@ -115,7 +116,10 @@
                 pageSize: 6, //每页条数
                 page: 1, //页数
                 count: 0, //文章总数
-                judge: false //判断全部还是分类
+                judge: false, //判断全部还是分类
+                height: {
+                    height: document.body.scrollHeight - 102 + 'px'
+                },
             };
         },
 
@@ -165,7 +169,7 @@
                 this.$store.dispatch('setArticleName', row.author);
                 this.$store.dispatch('setArticleContent', row.content);
                 this.$store.dispatch('setArticleId', row.id)
-                this.$store.dispatch('setArticleSynopsis',row.synopsis)
+                this.$store.dispatch('setArticleSynopsis', row.synopsis)
                     //重加载组件
                     ++this.menuKey
             },

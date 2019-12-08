@@ -6,7 +6,7 @@
  * @Github: https://github.com/tyutjohn
  -->
 <template>
-    <div class="client">
+    <div class="client" :style="height">
         <div class="client-header">
             <el-breadcrumb separator="/" style="font-size:16px;padding-top:20px">
                 <el-breadcrumb-item :to="{ path: '/Home' }">首页</el-breadcrumb-item>
@@ -81,6 +81,7 @@
     .client {
         width: 100%;
         background: #fff;
+        overflow: auto;
     }
 
     .client-header {
@@ -119,7 +120,10 @@
                     status: '',
                     id: ''
                 },
-                formLabelWidth: '120px'
+                formLabelWidth: '120px',
+                height: {
+                    height: document.body.scrollHeight - 102 + 'px'
+                },
             };
         },
 

@@ -6,25 +6,35 @@
  * @Github: https://github.com/tyutjohn
  -->
 <template>
-  <div class="editor">
+  <div class="editor" :style="height">
+    <div class="editor-jianjie">
+      <el-input placeholder="请输入标题(建议20字之内)" suffix-icon="el-icon-document" v-model="title"
+        style="width:500px;margin-bottom:20px;font-size:26px">
+      </el-input>
+      <el-input placeholder="请输入文章简介" suffix-icon="el-icon-article" type="textarea" v-model="synopsis"></el-input>
+    </div>
     <div class="editor-main">
       <div style="width:100%">
         <div class="edit">
-          <el-divider content-position="center">编辑区</el-divider>
+          <el-divider content-position="center">文章内容</el-divider>
           <div ref="toolbar" class="toolbar">
           </div>
-          <div style="padding: 5px 0; color: #ccc">中间隔离带</div>
+          <div style="padding: 5px 0; color: #ccc">正文部分</div>
           <div ref="editor" class="text">
           </div>
         </div>
       </div>
     </div>
-    <div class="editor-jianjie">
-      <el-input placeholder="请输入文章简介" suffix-icon="el-icon-article" type="textarea" v-model="synopsis"></el-input>
+    <div class="editor-image">
+      <p>请设置专栏封面</p>
+      <h4><i class="el-icon-warning-outline"></i> 封面默认使用默认封面，若需要定制单图，图片格式为jpg或png</h4>
+      <el-upload class="avatar-uploader" action="#" ref="upload" :show-file-list="false"
+        :on-error="handleAvatarError" :on-change="AvatarOnChange">
+        <img v-if="imageUrl" :src="imageUrl" class="avatar">
+        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+      </el-upload>
     </div>
     <div class="editor-bottom felx">
-      <el-input placeholder="请输入新闻标题" suffix-icon="el-icon-document" v-model="title" style="width:250px">
-      </el-input>
       <el-select v-model="articleClass" placeholder="请选择发布类别" style="width:200px">
         <el-option label="行业资讯" value="1"></el-option>
         <el-option label="申立德动态" value="2"></el-option>
@@ -42,7 +52,8 @@
     margin: 0 auto;
     position: relative;
     z-index: 0;
-    background: #fff
+    background: #fff;
+    overflow: auto;
   }
 
   .editor-main {
@@ -53,13 +64,13 @@
     border: 1px solid #ccc;
   }
 
-   .text {
+  .text {
     border: 1px solid #ccc;
     min-height: 500px;
-    font-size:16px !important;
-    padding-top:0 !important;
+    font-size: 16px !important;
+    padding-top: 0 !important;
     text-align: start !important;
-    height:auto !important;
+    height: auto !important;
   }
 
   .preview {
@@ -77,8 +88,47 @@
     padding-bottom: 20px;
   }
 
-  .editor-jianjie{
-    padding:20px;
+  .editor-jianjie {
+    padding: 20px;
+  }
+
+  .editor-image{
+    padding-left:20px;
+    margin-bottom:20px
+  }
+
+  .editor-image h4{
+    font-size:12px;
+    color:#99a2aa;
+    margin:10px auto;
+  }
+
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    margin-left:40%
+  }
+
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px !important;
+    text-align: center;
+  }
+
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
   }
 </style>
 
@@ -102,7 +152,11 @@
         title: '', //标题
         articleClass: '', //类别
         name: '', //发布者
-        synopsis:'',//简介
+        synopsis: '', //简介
+        height: {
+          height: document.body.scrollHeight - 102 + 'px'
+        },
+        imageUrl: ''
       };
     },
     model: {
@@ -167,14 +221,14 @@
       },
       //发布文章
       PublishArticle() {
-        let param=qs.stringify({
+        let param = qs.stringify({
           title: this.title,
           category: this.articleClass,
           author: this.name,
           content: this.info_,
-          synopsis:this.synopsis
+          synopsis: this.synopsis
         });
-        this.axios.post('/api/news',param,config).then(res => {
+        this.axios.post('/api/news', param, config).then(res => {
           if (res.data) {
             Loading.service({
               fullscreen: true,
@@ -191,6 +245,23 @@
             this.$message.error('文章发布失败');
           }
         })
+      },
+      //上次封面失败
+      handleAvatarError(res) {
+        console.log(res)
+      },
+      AvatarOnChange(file) {
+        const isJPG = file.type === 'image/jpeg';
+        const isLt2M = file.size / 1024 / 1024 < 2;
+
+        if (!isJPG) {
+          this.$message.error('上传头像图片只能是 JPG 格式!');
+        }
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 2MB!');
+        }
+        this.imageUrl = URL.createObjectURL(file.raw);
+        return isJPG && isLt2M;
       }
     },
 
