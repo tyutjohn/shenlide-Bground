@@ -12,7 +12,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>article-list</title>
+    <title>article</title>
     <!-- 引入样式 -->
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
     <link href="https://cdn.bootcss.com/wangEditor/10.0.13/wangEditor.min.css" rel="stylesheet">
@@ -90,7 +90,59 @@
             margin-top: 10px;
         }
 
+        .article-bottom {
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        .article-bottom p {
+            text-align: center;
+            color: #9c9b9b;
+            margin: 0;
+            margin-bottom: 10px;
+        }
+
+        .article-bottom-container img {
+            margin: 0 auto;
+            width: 132px;
+            height: 132px;
+        }
+
+        .contactUs {
+            display: flex;
+            justify-content: space-between;
+            border: 1px #dddddd solid;
+            margin: 43px;
+        }
+
+        .contactUs img {
+            width: 142px;
+            height: 128px;
+            margin: 10px;
+            margin-bottom: 0;
+        }
+
         @media screen and (max-width:580px) {
+            .header-infor {
+                font-size: 10px;
+            }
+
+            .header-infor-p {
+            margin-right: 4px;
+        }
+
+            .weichat {
+                display: none;
+            }
+
+            .print{
+                display:none;
+            }
+
+            .el-divider--horizontal {
+                margin: 10px 0;
+            }
+
             .article {
                 width: 96%;
                 padding: 10px 0px 38px 10px;
@@ -99,13 +151,15 @@
             .article-header {
                 padding-top: 4px;
                 padding-left: 10px;
-                height: 100px;
+                height: 70px;
             }
 
             .article-header .title {
                 max-width: 300px;
                 font-size: 18px;
                 height: 26px;
+                padding: 0px 0 26px 0;
+                line-height: 20px;
             }
 
             .article-content {
@@ -114,10 +168,35 @@
                 line-height: 1.5;
             }
 
+            .article-content img{
+                width:100%;
+                height: 100%;
+            }
+
             .article-footer {
                 height: 24px;
                 font-size: 12px;
                 padding-top: 4px;
+            }
+
+            .qrcodePc {
+                display: none;
+            }
+
+            .contactUs {
+                margin: 0;
+                width:96%;
+            }
+
+            .contactUs img {
+                width: 66px;
+                height: 60px;
+                margin: 0;
+                margin-top: 10px;
+            }
+
+            .article-bottom p {
+                font-size: 6px;
             }
         }
     </style>
@@ -127,7 +206,7 @@
     <div id="app">
         <div class="article">
             <div class="BreadcrumbNav">
-                <a href="#">首页</a>&nbsp;&gt;&nbsp;
+                <a href="#">首页</a> &gt;
                 <a href="#">{{getClassName(articleData.category)}}</a>
             </div>
             <div class="article-header">
@@ -135,12 +214,21 @@
                 <div class="header-infor">
                     <div class="header-infor-p">
                         <i class="el-icon-time" style="color:#666"></i>
-                        <p style="color:#666;display:inline">{{articleData.create_time}}&nbsp;&nbsp;&nbsp;&nbsp;来源:{{articleData.author}}</p>
+                        <p style="color:#666;display:inline">
+                            {{changeTime(articleData.create_time)}}&nbsp;&nbsp;&nbsp;&nbsp;来源:申立德</p>
                     </div>
                     <div class="header-infor">
-                        <div style="cursor:pointer">【 字体: <span>大</span>&nbsp;<span>中</span>&nbsp;<span>小</span> 】</div>
-                        <div @click="print" style="cursor:pointer"><i class="el-icon-printer"></i> 打印</div>
-                        <div><i class="el-icon-link"></i><img src="#"/></div>
+                        <div style="cursor:pointer">【 字体: <span @click="font_B">大</span>&nbsp;<span
+                                @click="font_M">中</span>&nbsp;<span @click="font_S">小</span> 】</div>
+                        <div @click="print" style="cursor:pointer;margin-right: 4px;" class="print"><i class="el-icon-printer"></i> 打印
+                        </div>
+                        <div style="cursor: pointer;color:greenyellow" @click="shareWeiChat" class="weichat"><i
+                                class="el-icon-chat-dot-round"></i>分享微信</div>
+                        <el-dialog title="请打开微信扫一扫" :visible.sync="dialogVisible" width="30%">
+                            <span slot="footer" class="dialog-footer">
+                                <div id="qrcode" style="margin-left:30px;margin-bottom: 20px;"></div>
+                            </span>
+                        </el-dialog>
                     </div>
                 </div>
             </div>
@@ -152,8 +240,28 @@
                     <p style="display:inline;margin-left:6px">申立德</p>
                 </div>
                 <div style="margin-right: 20px;">
-                    <i class="el-icon-time"></i>
-                    <p style="display: inline;margin-left:6px;">创建于:{{articleData.create_time}}</p>
+                    <p style="display: inline;margin-left:6px;">编辑:{{articleData.author}}</p>
+                </div>
+            </div>
+            <div class="article-bottom">
+                <div class="article-bottom-container">
+                    <div id="qrcodePc" class="qrcodePc">
+                        <p style="text-align:center;color:#b5b5b5;font-size: 12px;line-height: 26px;">扫一扫在手机打开当前页</p>
+                    </div>
+                    <h3 style="margin-left: 2%;">联系我们</h3>
+                    <div class="contactUs">
+                        <div style="margin-left: 10px;"><img src="static/images/code.jpg" alt="事务所公众号">
+                            <p>事务所公众号</p>
+                        </div>
+                        <div><img src="static/images/qrcode-c.png" alt="程圆圆">
+                            <p style="margin-bottom: 0;">程女士</p>
+                            <p>13835197605</p>
+                        </div>
+                        <div style="margin-right:10px"><img src="static/images/qrcode-g.png" alt="郭海燕">
+                            <p style="margin-bottom:0;">郭女士</p>
+                            <p>13994262327</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -165,20 +273,24 @@
     <script src="https://unpkg.com/element-ui/lib/index.js"></script>
     <!--引入wangEditor-->
     <script src="https://cdn.bootcss.com/wangEditor/10.0.13/wangEditor.min.js"></script>
+    <!--引入qrcodejs-->
+    <script src="static/js/qrcode.min.js"></script>
     <script>
         var app = new Vue({
             el: '#app',
             data: {
                 articleData: {
-                    title: '文章标题', //标题
-                    author: '小王', //作者
-                    category: '1', //类别
-                    content: '这是一篇文章,<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;这一次也是根据LEO分享的原型图，进行了图标改变，重新设计了原型图界面，之后自己设计一种简约清新风格的版面。</p><p>请各位多多指教！</p><h1>&nbsp; &nbsp; 测试排版</h1><p>&nbsp; &nbsp; &nbsp; &nbsp; 这是一篇设计风格的测试图，<span style="text-decoration-line: underline; color: rgb(77, 128, 191);">采用原型设计</span>，<span style="color: rgb(194, 79, 74);">颜色测试</span><br></p><p><span style="color: rgb(194, 79, 74);">比如这是排版测试，<span style="background-color: rgb(77, 128, 191);">背景色测试</span><span style="background-color: rgb(255, 255, 255);"> 飞搭，白色底色，</span></span></p><p style="text-align: center;"><a href="http://www.baidu.com" target="_blank">这是百度链接</a>,居中设置<span style="font-size: 16px; text-align: left;">&nbsp;</span></p><p style="text-align: left;"><span style="font-size: 16px; text-align: left;">插一张图片</span></p><p style="text-align: left;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEQAAABECAYAAAA4E5OyAAABOUlEQVR4nO3b0Q2CMBRA0adxFR1Dp5Ah2cI1XEa/NHoDBqWFV3PPnybEcqmNSetmfzzfQk/btQeQjUHAIGAQMAgYBAwCBgGDgEFgt/YASrte+rfXh1P31fVVg3BwU317E6+fx2uH3vtk0RkyNrBfw9VQNciUp/WI8eusKC3FopolRsSfLaqHU5d7UV3D3NmW4iuTiUHAIGAQMAgYBAwCBgGDgEHAIGAQMAgYBAwCBgGDgEHAIGAQMAgYBAwCBgGDQPM7d69blyX2iJueITVODjQdJGJ4g3uOZoPM3eUf02yQiDrnSpoMUvMIVnNBah/BShFkyhO/XvrBGKVnS5rfIVNubGxWlJwti55THRp4pgN3EQvPkEznUcds/FfmuxSLaiYGAYOAQcAgYBAwCBgEDAIGAYOAQcAgcAeA9UR/iGNYVwAAAABJRU5ErkJggg==" style="max-width:100%;"><span style="font-size: 16px; text-align: left;"><br></span></p><p style="text-align: left;">插一张网络图片</p><p style="text-align: left;"><img src="https://imgavater.ui.cn/avatar/1/6/0/1/951061.jpg?imageMogr2/auto-orient/crop/!1125x1125a0a798/thumbnail/148x148" style="max-width:100%;"><br></p>', //内容
-                    create_time: '2019-11-01', //发布时间
-                }
+                    title: '', //标题
+                    author: '', //作者
+                    category: '', //类别
+                    content: '',//内容
+                    create_time: '', //发布时间
+                },
+                dialogVisible: false, //二维码提示框
+                codenum: 0, //二维码是否生成
             },
             beforeMount() {
-                //this.getArticle();    //测试阶段先注释
+                this.getArticle(); //测试阶段先注释
             },
             mounted() {
 
@@ -186,7 +298,7 @@
             methods: {
                 //获取文章数据
                 getArticle() {
-                    axios.get('/api/news/' + id).then(res => {
+                    axios.get('/api/news/' + '9X9dDi4gckoMpQoco6BFPK').then(res => {
                         if (res.status == 200) {
                             this.articleData = res.data;
                         } else {
@@ -194,26 +306,61 @@
                         }
                     })
                 },
-                print(){
+                //改变字体大小(大，中，小)
+                font_B() {
+                    document.querySelector('#article').style.fontSize = 'larger'
+                },
+                font_M() {
+                    document.querySelector('#article').style.fontSize = "medium"
+                },
+                font_S() {
+                    document.querySelector('#article').style.fontSize = 'smaller'
+                },
+                //打印文章
+                print() {
                     window.print()
+                },
+                //分享微信
+                shareWeiChat() {
+                    this.dialogVisible = true;
+                    if (this.codenum == 0) {
+                        new QRCode(document.getElementById('qrcode'), window.location.href);
+                        ++this.codenum;
+                    }
                 }
-
             },
             computed: {
+                //计算类别
                 getClassName() {
                     return function (res) {
                         switch (res) {
-                            case '1':
+                            case 1:
                                 return '行业资讯'
-                            case '2':
+                            case 2:
                                 return '申立德动态'
-                            case '3':
+                            case 3:
                                 return '学术交流'
                         }
+                    }
+                },
+                //GMT时间转换
+                changeTime() { //时间GMT转换
+                    return function (time) {
+                        let date = new Date(time)
+                        let Str = date.getUTCFullYear() + '-' +
+                            (date.getMonth() + 1) + '-' +
+                            date.getDate() + ' ' +
+                            date.getUTCHours() + ':' +
+                            date.getUTCMinutes()
+                        return Str
                     }
                 }
             },
         })
+    </script>
+    <!--pc端显示二维码-->
+    <script type="text/javascript">
+        new QRCode(document.getElementById('qrcodePc'), window.location.href);
     </script>
 </body>
 
