@@ -1,9 +1,11 @@
 <template>
   <div class="editor">
-    <div class="editor-jianjie"> 
-      标题:<el-input placeholder="请输入标题" suffix-icon="el-icon-document" v-model="article.title" style="width:500px;margin-bottom:20px;font-size:26px">
+    <div class="editor-jianjie">
+      标题:<el-input placeholder="请输入标题" suffix-icon="el-icon-document" v-model="article.title"
+        style="width:500px;margin-bottom:20px;font-size:26px">
       </el-input>
-      <el-input placeholder="请输入文章简介" suffix-icon="el-icon-article" type="textarea" v-model="article.synopsis"></el-input>
+      <el-input placeholder="请输入文章简介" suffix-icon="el-icon-article" type="textarea" v-model="article.synopsis">
+      </el-input>
     </div>
     <div class="editor-main">
       <div style="width:100%">
@@ -23,8 +25,7 @@
         <el-option label="申立德动态" value="2"></el-option>
         <el-option label="学术交流" value="3"></el-option>
       </el-select>
-      <el-input size="medium" placeholder="请输入作者" suffix-icon="el-icon-user" v-model="article.name"
-        style="width:200px">
+      <el-input size="medium" placeholder="请输入作者" suffix-icon="el-icon-user" v-model="article.name" style="width:200px">
       </el-input>
       <el-button type="warning" @click="PublishArticle()">确认修改</el-button>
     </div>
@@ -67,17 +68,12 @@
     padding-bottom: 20px;
   }
 
-  .editor-jianjie{
-    padding:20px;
+  .editor-jianjie {
+    padding: 20px;
   }
 </style>
 
 <script>
-  const config = {
-    headers: {
-      'Authorization': "bearer " + sessionStorage.getItem('userToken')
-    }
-  }
   import E from 'wangeditor'
   import qs from 'qs'
   export default {
@@ -90,8 +86,8 @@
           title: '', //标题
           articleClass: '', //类别
           name: '', //发布者
-          id: '' ,//文章id
-          synopsis:'' //文章简介
+          id: '', //文章id
+          synopsis: '' //文章简介
         }
       };
     },
@@ -160,14 +156,18 @@
       },
       //修改文章
       PublishArticle() {
-        let param=qs.stringify({
+        let param = qs.stringify({
           title: this.article.title,
           category: this.article.articleClass,
           author: this.article.name,
           content: this.info_,
-          synopsis:this.article.synopsis
+          synopsis: this.article.synopsis
         });
-        this.axios.put('/api/news/' + this.article.id,param,config).then(res => {
+        this.axios.put('/api/news/' + this.article.id, param, {
+          headers: {
+            'Authorization': "bearer " + sessionStorage.getItem('userToken')
+          }
+        }).then(res => {
           if (res.status == '200') {
             this.$message({
               message: '文章修改成功',
@@ -184,12 +184,12 @@
         this.article.title = this.$store.state.article.title;
         this.article.articleClass = this.$store.state.article.class;
         this.article.id = this.$store.state.article.id;
-        this.article.synopsis=this.$store.state.article.synopsis;
+        this.article.synopsis = this.$store.state.article.synopsis;
       },
       //获取content内容
-      getArticleContent(){
-        this.axios.get('/api/news/'+this.article.id).then(res=>{
-          this.info_=res.data.content;
+      getArticleContent() {
+        this.axios.get('/api/news/' + this.article.id).then(res => {
+          this.info_ = res.data.content;
         })
       }
     },

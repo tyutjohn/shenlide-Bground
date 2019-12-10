@@ -28,8 +28,8 @@
     <div class="editor-image">
       <p>请设置专栏封面</p>
       <h4><i class="el-icon-warning-outline"></i> 封面默认使用默认封面，若需要定制单图，图片格式为jpg或png</h4>
-      <el-upload class="avatar-uploader" action="#" ref="upload" :show-file-list="false"
-        :on-error="handleAvatarError" :on-change="AvatarOnChange">
+      <el-upload class="avatar-uploader" action="#" ref="upload" :show-file-list="false" :on-error="handleAvatarError"
+        :on-change="AvatarOnChange">
         <img v-if="imageUrl" :src="imageUrl" class="avatar">
         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
       </el-upload>
@@ -92,15 +92,15 @@
     padding: 20px;
   }
 
-  .editor-image{
-    padding-left:20px;
-    margin-bottom:20px
+  .editor-image {
+    padding-left: 20px;
+    margin-bottom: 20px
   }
 
-  .editor-image h4{
-    font-size:12px;
-    color:#99a2aa;
-    margin:10px auto;
+  .editor-image h4 {
+    font-size: 12px;
+    color: #99a2aa;
+    margin: 10px auto;
   }
 
   .avatar-uploader .el-upload {
@@ -109,7 +109,7 @@
     cursor: pointer;
     position: relative;
     overflow: hidden;
-    margin-left:40%
+    margin-left: 40%
   }
 
   .avatar-uploader .el-upload:hover {
@@ -133,11 +133,6 @@
 </style>
 
 <script>
-  const config = {
-    headers: {
-      'Authorization': "bearer " + sessionStorage.getItem('userToken')
-    }
-  }
   import E from 'wangeditor'
   import {
     Loading
@@ -228,7 +223,11 @@
           content: this.info_,
           synopsis: this.synopsis
         });
-        this.axios.post('/api/news', param, config).then(res => {
+        this.axios.post('/api/news', param, {
+          headers: {
+            'Authorization': "bearer " + sessionStorage.getItem('userToken')
+          }
+        }).then(res => {
           if (res.data) {
             Loading.service({
               fullscreen: true,

@@ -111,11 +111,6 @@
 </style>
 
 <script>
-  const config = {
-    headers: {
-      'Authorization': "bearer " + sessionStorage.getItem('userToken')
-    }
-  }
   import qs from 'qs'
   export default {
     data() {
@@ -169,7 +164,7 @@
           }]
         },
         height: {
-          height: document.body.scrollHeight-102+ 'px'
+          height: document.body.scrollHeight - 102 + 'px'
         },
       };
     },
@@ -203,16 +198,20 @@
           password: this.form.password,
           nickname: this.form.nickname
         });
-        this.axios.post('/api/admin', param, config).then(res => {
+        this.axios.post('/api/admin', param, {
+          headers: {
+            'Authorization': "bearer " + sessionStorage.getItem('userToken')
+          }
+        }).then(res => {
           if (res.status == 200) {
             if (res.data) {
               this.$message({
                 message: '注册成功',
                 type: 'success'
               });
-            this.dialogFormVisible = false;
-            this.getAdmin();
-            }else{
+              this.dialogFormVisible = false;
+              this.getAdmin();
+            } else {
               this.$message.error('用户名已存在或权限不足')
             }
           } else {
@@ -230,7 +229,11 @@
           password: this.formPass.password,
           nickname: this.formPass.nickname
         });
-        this.axios.put('/api/admin/' + this.username, param, config).then(res => {
+        this.axios.put('/api/admin/' + this.username, param, {
+          headers: {
+            'Authorization': "bearer " + sessionStorage.getItem('userToken')
+          }
+        }).then(res => {
           if (res.status == 200) {
             this.$message({
               message: '修改成功',
@@ -254,7 +257,11 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.axios.delete('/api/admin/' + this.username, config).then(res => {
+          this.axios.delete('/api/admin/' + this.username, {
+            headers: {
+              'Authorization': "bearer " + sessionStorage.getItem('userToken')
+            }
+          }).then(res => {
             if (res.status == 200) {
               if (res.data) {
                 this.$message({
@@ -278,7 +285,11 @@
       },
       //获取管理员列表
       getAdmin() {
-        this.axios.get('/api/admin', config).then(res => {
+        this.axios.get('/api/admin', {
+          headers: {
+            'Authorization': "bearer " + sessionStorage.getItem('userToken')
+          }
+        }).then(res => {
           if (res.status == 200) {
             this.userData = res.data;
           } else {

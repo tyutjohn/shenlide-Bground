@@ -114,11 +114,6 @@
 <script>
     import Header from '../components/Header'
     import Bottom from '../components/Bottom'
-    const config = {
-        headers: {
-            'Authorization': "bearer " + sessionStorage.getItem('userToken')
-        }
-    }
     export default {
         data() {
             return {
@@ -142,7 +137,7 @@
         computed: {},
 
         beforeMount() {
-             this.user.userName = this.$store.state.username;
+            this.user.userName = this.$store.state.username;
         },
 
         mounted() {
@@ -152,7 +147,11 @@
         methods: {
             //token验证获取用户信息
             getUser() {
-                this.axios.get('/api/admin/' + this.user.userName,config).then(res => {
+                this.axios.get('/api/admin/' + this.user.userName, {
+                    headers: {
+                        'Authorization': "bearer " + sessionStorage.getItem('userToken')
+                    }
+                }).then(res => {
                     this.user.userName = res.data.nickname
                 })
             },

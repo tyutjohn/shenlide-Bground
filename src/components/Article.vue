@@ -88,11 +88,6 @@
 </style>
 
 <script>
-    const config = {
-        headers: {
-            'Authorization': "bearer " + sessionStorage.getItem('userToken')
-        }
-    }
     import Editor from '../components/EditorUpdate'
     export default {
         data() {
@@ -193,7 +188,11 @@
             //删除文章
             articleDelect(row) {
                 var id = row.id;
-                this.axios.delete('/api/news/' + id, config).then((res) => {
+                this.axios.delete('/api/news/' + id, {
+                    headers: {
+                        'Authorization': "bearer " + sessionStorage.getItem('userToken')
+                    }
+                }).then((res) => {
                     if (res.status == 200) {
                         this.$message({
                             message: '删除成功',
@@ -213,7 +212,6 @@
                         page: this.page
                     }
                 }).then((res) => {
-                    console.log(res)
                     if (res.status == 200) {
                         this.articleData = res.data.news;
                         this.count = res.data.count;

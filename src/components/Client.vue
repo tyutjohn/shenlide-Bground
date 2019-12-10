@@ -97,11 +97,6 @@
 </style>
 
 <script>
-    const config = {
-        headers: {
-            'Authorization': "bearer " + sessionStorage.getItem('userToken')
-        }
-    }
     import qs from 'qs'
     export default {
         data() {
@@ -192,7 +187,11 @@
                     remark: this.clientForm.remark,
                     status: this.clientForm.status
                 });
-                this.axios.put('/api/customer/' + this.clientForm.id, param, config).then((res) => {
+                this.axios.put('/api/customer/' + this.clientForm.id, param, {
+                    headers: {
+                        'Authorization': "bearer " + sessionStorage.getItem('userToken')
+                    }
+                }).then((res) => {
                     if (res.status == 200) {
                         this.$message({
                             message: '修改成功',
@@ -213,7 +212,11 @@
                     type: 'warning'
                 }).then(() => {
                     var id = row.id;
-                    this.axios.delete('/api/customer/' + id, config).then(res => {
+                    this.axios.delete('/api/customer/' + id, {
+                        headers: {
+                            'Authorization': "bearer " + sessionStorage.getItem('userToken')
+                        }
+                    }).then(res => {
                         if (res.status == 200) {
                             this.$message({
                                 type: 'success',
