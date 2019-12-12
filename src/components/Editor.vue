@@ -11,7 +11,7 @@
       <el-input placeholder="请输入标题(建议20字之内)" suffix-icon="el-icon-document" v-model="title"
         style="width:500px;margin-bottom:20px;font-size:26px">
       </el-input>
-      <el-input placeholder="请输入文章简介" suffix-icon="el-icon-article" type="textarea" v-model="synopsis"></el-input>
+      <el-input placeholder="请输入文章简介(建议50字之内)" suffix-icon="el-icon-article" type="textarea" v-model="synopsis"></el-input>
     </div>
     <div class="editor-main">
       <div style="width:100%">
