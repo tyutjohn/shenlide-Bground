@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2019-12-12 15:11:34
- * @LastEditTime: 2019-12-12 15:21:10
+ * @LastEditTime: 2019-12-12 16:52:50
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \htdocs\customer.html
@@ -31,22 +31,24 @@
         var app = new Vue({
             el: '#app',
             data: {
-                customer:{      //客户信息
-                    tel:'',     //电话
-                    intention:''    //意向
+                customer: { //客户信息
+                    tel: '', //电话
+                    intention: '' //意向
                 }
             },
             methods: {
                 //提交信息
-                upLoad(){
-                    axios.post('/api/customer',{
-                        tel:this.customer.tel,
-                        intention:this.customer.intention
-                    }).then(res=>{
+                upLoad() {
+                    var fd = new FormData()
+                    fd.append('tel', this.customer.tel);
+                    fd.append('intention',this.customer.intention);
+                    axios.post('/api/customer',fd, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    }).then(res => {
                         if(res.status==200){
-                            console.log(res)
-                        }else{
-                            console.log(res)
+                            console.log('提交成功')//可改交互
                         }
                     })
                 }
