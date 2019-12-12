@@ -15,7 +15,6 @@
     <title>article</title>
     <!-- 引入样式 -->
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
-    <link href="https://cdn.bootcss.com/wangEditor/10.0.13/wangEditor.min.css" rel="stylesheet">
     <style>
         body {
             background: #eff3f5;
@@ -224,11 +223,11 @@
 </head>
 
 <body>
-    <div id="app">
+    <div id="app" v-loading="loading">
         <div class="article">
             <div class="BreadcrumbNav">
                 <a href="#">首页</a> &gt;
-                <a href="#">{{getClassName(articleData.category)}}</a>
+                <a href="article-list.html">{{getClassName(articleData.category)}}</a>
             </div>
             <div class="article-header">
                 <p class="title">{{articleData.title}}</p>
@@ -273,7 +272,7 @@
                     <div class="newArticle">
                         <h3 style="margin-left: 10px;">最新资讯</h3>
                         <ul>
-                            <li v-for="item in newslist"><a :href="'#?'+item.id" style="text-decoration: none;color:#00558e">{{item.title}}</a></li>
+                            <li v-for="item in newslist"><a :href="'article.html?'+item.id" style="text-decoration: none;color:#00558e">{{item.title}}</a></li>
                         </ul>
                     </div>
                     <h3 style="margin-left: 4%;">联系我们</h3>
@@ -300,11 +299,9 @@
     </div>
     <!--引入vue-cdn-->
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
-    <script src="https://cdn.bootcss.com/axios/0.19.0/axios.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <!-- 引入组件库 -->
     <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-    <!--引入wangEditor-->
-    <script src="https://cdn.bootcss.com/wangEditor/10.0.13/wangEditor.min.js"></script>
     <!--引入qrcodejs-->
     <script src="static/js/qrcode.min.js"></script>
     <script>
@@ -321,6 +318,7 @@
                 newslist:'',//最新资讯
                 dialogVisible: false, //二维码提示框
                 codenum: 0, //二维码是否生成
+                loading:true//数据加载
             },
             beforeMount() {
                 this.getArticle();
@@ -332,13 +330,15 @@
             methods: {
                 //获取文章数据
                 getArticle() {
-                    axios.get('/api/news/' + '9X9dDi4gckoMpQoco6BFPK').then(res => {
+                    let id=window.location.href.split('?')[1];
+                    axios.get('/api/news/' + id).then(res => {
                         if (res.status == 200) {
                             this.articleData = res.data;
                         } else {
                             this.$message.error('网络异常');
                         }
                     })
+                    this.loading=false;
                 },
                 //改变字体大小(大，中，小)
                 font_B() {
