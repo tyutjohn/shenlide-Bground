@@ -11,7 +11,8 @@
       <el-input placeholder="请输入标题(建议20字之内)" suffix-icon="el-icon-document" v-model="title"
         style="width:500px;margin-bottom:20px;font-size:26px">
       </el-input>
-      <el-input placeholder="请输入文章简介(建议50字之内)" suffix-icon="el-icon-article" type="textarea" v-model="synopsis"></el-input>
+      <el-input placeholder="请输入文章简介(建议50字之内)" suffix-icon="el-icon-article" type="textarea" v-model="synopsis">
+      </el-input>
     </div>
     <div class="editor-main">
       <div style="width:100%">
@@ -28,8 +29,10 @@
     <div class="editor-image">
       <p>请设置专栏封面</p>
       <h4><i class="el-icon-warning-outline"></i> 封面默认使用默认封面，若需要定制单图，图片格式为jpg或png</h4>
+      <el-switch v-model="switchButton" active-text="使用默认封面" inactive-text="定制封面">
+      </el-switch>
       <el-upload class="avatar-uploader" action="#" ref="upload" :show-file-list="false" :on-error="handleAvatarError"
-        :on-change="AvatarOnChange">
+        :on-change="AvatarOnChange" v-if="!switchButton" :auto-upload="false">
         <img v-if="imageUrl" :src="imageUrl" class="avatar">
         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
       </el-upload>
@@ -151,7 +154,8 @@
         height: {
           height: document.body.scrollHeight - 102 + 'px'
         },
-        imageUrl: ''
+        imageUrl: '',
+        switchButton:true,//
       };
     },
     model: {
@@ -202,7 +206,7 @@
           'emoticon', // 表情
           'image', // 插入图片
           'table', // 表格
-          'video',//视频
+          'video', //视频
           'code', // 插入代码
           'undo', // 撤销
           'redo', // 重复
