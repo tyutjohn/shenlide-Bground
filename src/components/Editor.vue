@@ -31,11 +31,12 @@
       <h4><i class="el-icon-warning-outline"></i> 封面默认使用默认封面，若需要定制单图，图片格式为jpg或png</h4>
       <el-switch v-model="switchButton" active-text="使用默认封面" inactive-text="定制封面">
       </el-switch>
-      <el-upload class="avatar-uploader" action="#" ref="upload" :show-file-list="false" :on-error="handleAvatarError"
-        :on-change="AvatarOnChange" v-if="!switchButton" :auto-upload="false">
-        <img v-if="imageUrl" :src="imageUrl" class="avatar">
-        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-      </el-upload>
+      <div v-if="!switchButton" class="fileUpdate">
+        <div class="filecontainer">
+          <div class="fileCover"><img :src="fileCover" @click="fileChange" style="width:100%;height:100%"></div>
+          <input type="file" id="file" v-show="false" name="file" @change="fileUpdate($event)">
+        </div>
+      </div>
     </div>
     <div class="editor-bottom felx">
       <el-select v-model="articleClass" placeholder="请选择发布类别" style="width:200px">
@@ -133,6 +134,24 @@
     height: 178px;
     display: block;
   }
+
+  .fileUpdate {
+    height: 200px;
+    width: 100%;
+  }
+
+  .filecontainer {
+    width: 80%;
+    margin: 20px auto;
+  }
+
+  .fileCover {
+    width: 140px;
+    height: 100px;
+    font-size: 100px;
+    cursor: pointer;
+    margin:0 auto;
+  }
 </style>
 
 <script>
@@ -140,7 +159,6 @@
   import {
     Loading
   } from 'element-ui';
-  import qs from 'qs'
   export default {
     name: 'editoritem',
     data() {
@@ -154,8 +172,9 @@
         height: {
           height: document.body.scrollHeight - 102 + 'px'
         },
-        imageUrl: '',
-        switchButton:true,//
+        file: '', //封面
+        switchButton: true ,//封面开关
+        fileCover:require('../assets/images/file.png')
       };
     },
     model: {
@@ -221,16 +240,17 @@
       },
       //发布文章
       PublishArticle() {
-        let param = qs.stringify({
-          title: this.title,
-          category: this.articleClass,
-          author: this.name,
-          content: this.info_,
-          synopsis: this.synopsis
-        });
+        let param=new FormData();
+        param.append('title',this.title);
+        param.append('category',this.articleClass);
+        param.append('author',this.name);
+        param.append('content',this.info_);
+        param.append('synopsis',this.synopsis);
+        param.append('file',this.file);
         this.axios.post('/api/news', param, {
           headers: {
-            'Authorization': "bearer " + sessionStorage.getItem('userToken')
+            'Authorization': "bearer " + sessionStorage.getItem('userToken'),
+            'Content-Type': 'application/x-www-form-urlencoded'
           }
         }).then(res => {
           if (res.data) {
@@ -250,22 +270,19 @@
           }
         })
       },
-      //上次封面失败
-      handleAvatarError(res) {
-        console.log(res)
+      //调用文件
+      fileChange() {
+        document.querySelector('#file').click();
       },
-      AvatarOnChange(file) {
-        const isJPG = file.type === 'image/jpeg';
-        const isLt2M = file.size / 1024 / 1024 < 2;
-
-        if (!isJPG) {
-          this.$message.error('上传头像图片只能是 JPG 格式!');
+      //获取文件
+      fileUpdate(event){
+        let render=new FileReader();
+        let files=event.target.files[0];
+        this.file=event.target.files[0];
+        render.readAsDataURL(files);
+        render.onload=()=>{
+          this.fileCover=render.result;
         }
-        if (!isLt2M) {
-          this.$message.error('上传头像图片大小不能超过 2MB!');
-        }
-        this.imageUrl = URL.createObjectURL(file.raw);
-        return isJPG && isLt2M;
       }
     },
 
