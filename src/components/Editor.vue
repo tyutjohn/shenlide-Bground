@@ -265,6 +265,10 @@
             this.synopsis = '';
             this.editor.txt.clear();
             Loading.service().close();
+            this.$message({
+              type:'success',
+              message:'文章上次成功'
+            })
           } else {
             this.$message.error('文章发布失败');
           }

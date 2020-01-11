@@ -223,7 +223,6 @@
                         page: this.page
                     }
                 }).then((res) => {
-                    console.log(res)
                     if (res.status == 200) {
                         this.articleData = res.data.news;
                         this.count = res.data.count;
