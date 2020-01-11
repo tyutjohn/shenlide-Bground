@@ -187,22 +187,33 @@
             },
             //删除文章
             articleDelect(row) {
-                var id = row.id;
-                this.axios.delete('/api/news/' + id, {
-                    headers: {
-                        'Authorization': "bearer " + sessionStorage.getItem('userToken')
-                    }
-                }).then((res) => {
-                    if (res.status == 200) {
-                        this.$message({
-                            message: '删除成功',
-                            type: 'success'
-                        })
-                        this.getArticleData();
-                    } else {
-                        this.$message.error('操作失败')
-                    }
-                })
+                let id = row.id;
+                this.$confirm('此操作将删除该文章, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.axios.delete('/api/news/' + id, {
+                        headers: {
+                            'Authorization': "bearer " + sessionStorage.getItem('userToken')
+                        }
+                    }).then((res) => {
+                        if (res.status == 200) {
+                            this.$message({
+                                message: '删除成功',
+                                type: 'success'
+                            })
+                            this.getArticleData();
+                        } else {
+                            this.$message.error('操作失败')
+                        }
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
             },
             //获取文章列表
             getArticleData() {
@@ -212,6 +223,7 @@
                         page: this.page
                     }
                 }).then((res) => {
+                    console.log(res)
                     if (res.status == 200) {
                         this.articleData = res.data.news;
                         this.count = res.data.count;

@@ -28,7 +28,7 @@
     </div>
     <div class="editor-image">
       <p>请设置专栏封面</p>
-      <h4><i class="el-icon-warning-outline"></i> 封面默认使用默认封面，若需要定制单图，图片格式为jpg或png</h4>
+      <h4><i class="el-icon-warning-outline"></i> 封面默认使用默认封面，若需要定制单图，图片格式为jpg或png,封面大小不能超过5M</h4>
       <el-switch v-model="switchButton" active-text="使用默认封面" inactive-text="定制封面">
       </el-switch>
       <div v-if="!switchButton" class="fileUpdate">
@@ -150,7 +150,7 @@
     height: 100px;
     font-size: 100px;
     cursor: pointer;
-    margin:0 auto;
+    margin: 0 auto;
   }
 </style>
 
@@ -173,8 +173,8 @@
           height: document.body.scrollHeight - 102 + 'px'
         },
         file: '', //封面
-        switchButton: true ,//封面开关
-        fileCover:require('../assets/images/file.png')
+        switchButton: true, //封面开关
+        fileCover: require('../assets/images/file.png')
       };
     },
     model: {
@@ -240,13 +240,17 @@
       },
       //发布文章
       PublishArticle() {
-        let param=new FormData();
-        param.append('title',this.title);
-        param.append('category',this.articleClass);
-        param.append('author',this.name);
-        param.append('content',this.info_);
-        param.append('synopsis',this.synopsis);
-        param.append('file',this.file);
+        Loading.service({
+          fullscreen: true,
+          text: '文章上传中'
+        });
+        let param = new FormData();
+        param.append('title', this.title);
+        param.append('category', this.articleClass);
+        param.append('author', this.name);
+        param.append('content', this.info_);
+        param.append('synopsis', this.synopsis);
+        param.append('file', this.file);
         this.axios.post('/api/news', param, {
           headers: {
             'Authorization': "bearer " + sessionStorage.getItem('userToken'),
@@ -254,17 +258,13 @@
           }
         }).then(res => {
           if (res.data) {
-            Loading.service({
-              fullscreen: true,
-              text: '文章上传成功'
-            });
-            setTimeout(() => {
-              this.title = '';
-              this.articleClass = '';
-              this.name = '';
-              this.info_ = '';
-              Loading.service().close();
-            }, 1000)
+            this.title = '';
+            this.articleClass = '';
+            this.name = '';
+            this.info_ = '';
+            this.synopsis = '';
+            this.editor.txt.clear();
+            Loading.service().close();
           } else {
             this.$message.error('文章发布失败');
           }
@@ -275,13 +275,17 @@
         document.querySelector('#file').click();
       },
       //获取文件
-      fileUpdate(event){
-        let render=new FileReader();
-        let files=event.target.files[0];
-        this.file=event.target.files[0];
-        render.readAsDataURL(files);
-        render.onload=()=>{
-          this.fileCover=render.result;
+      fileUpdate(event) {
+        let render = new FileReader();
+        let files = event.target.files[0];
+        if (files.size > 5242880) {
+          this.$message.error('选取封面大小应小于5M,请重新选择');
+        } else {
+          this.file = files;
+          render.readAsDataURL(files);
+          render.onload = () => {
+            this.fileCover = render.result;
+          }
         }
       }
     },

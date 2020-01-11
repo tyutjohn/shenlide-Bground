@@ -126,6 +126,8 @@
                     userName: ''
                 },
                 isCompany: 'Editor',
+                key:'',
+                keyPath:''
             };
         },
 
@@ -156,10 +158,12 @@
                 })
             },
             handleOpen(key, keyPath) {
-                console.log(key, keyPath);
+                this.key=key;
+                this.keyPath=keyPath;
             },
             handleClose(key, keyPath) {
-                console.log(key, keyPath);
+                this.key=key;
+                this.keyPath=keyPath;
             },
             //动态加载工作区组件
             componentMount(key) {

@@ -76,6 +76,9 @@
 <script>
   import E from 'wangeditor'
   import qs from 'qs'
+  import {
+    Loading
+  } from 'element-ui';
   export default {
     name: 'editoritem',
     data() {
@@ -142,7 +145,7 @@
           'emoticon', // 表情
           'image', // 插入图片
           'table', // 表格
-          'video',//视频
+          'video', //视频
           'code', // 插入代码
           'undo', // 撤销
           'redo', // 重复
@@ -157,6 +160,10 @@
       },
       //修改文章
       PublishArticle() {
+        Loading.service({
+          fullscreen: true,
+          text: '文章修改中'
+        });
         let param = qs.stringify({
           title: this.article.title,
           category: this.article.articleClass,
@@ -170,6 +177,7 @@
           }
         }).then(res => {
           if (res.status == '200') {
+            Loading.service().close();
             this.$message({
               message: '文章修改成功',
               type: 'success'
