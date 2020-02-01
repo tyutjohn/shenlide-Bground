@@ -126,7 +126,42 @@
       //设置editor
       seteditor() {
         this.editor = new E(this.$refs.toolbar, this.$refs.editor)
-        this.editor.customConfig.uploadImgShowBase64 = true // base 64 存储图片
+        //this.editor.customConfig.uploadImgShowBase64 = true // base 64 存储图片
+        //设置文件上传的参数名
+        this.editor.customConfig.uploadFileName = 'file';
+        //配置服务器端上传图片地址
+        this.editor.customConfig.uploadImgServer = '/api/upload';
+        // 将图片大小限制为 5M
+        this.editor.customConfig.uploadImgMaxSize = 5 * 1024 * 1024
+        // 限制一次最多上传 5 张图片
+        this.editor.customConfig.uploadImgMaxLength = 5
+        //自定义header
+        this.editor.customConfig.uploadImgHeaders = {
+          'Accept': 'text/x-json'
+        }
+        let that=this
+        //自定义图片上传监听函数
+        this.editor.customConfig.uploadImgHooks = {
+          success: function () {
+            that.$message({
+              type: 'success',
+              message: '上传成功'
+            })
+          },
+          fail: function (xhr, editor, result) {
+            that.$message.error('上传失败' + result)
+          },
+          error: function () {
+            that.$message.error('上传错误')
+          },
+          timeout: function (xhr) {
+            that.$message.error('上传超时' + xhr)
+          },
+          customInsert: function (insertImg, result) {
+            var url = result.data
+            insertImg(url)
+          }
+        }
         // 配置菜单
         this.editor.customConfig.menus = [
           'head', // 标题
