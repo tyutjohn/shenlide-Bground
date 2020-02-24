@@ -394,11 +394,12 @@
                 changeTime() { //时间GMT转换
                     return function (time) {
                         let date = new Date(time)
+                        let minutes=date.getUTCMinutes()>9?date.getUTCMinutes():"0"+date.getUTCMinutes()
                         let Str = date.getUTCFullYear() + '-' +
                             (date.getMonth() + 1) + '-' +
                             date.getDate() + ' ' +
                             date.getUTCHours() + ':' +
-                            date.getUTCMinutes()
+                            minutes
                         return Str
                     }
                 }
