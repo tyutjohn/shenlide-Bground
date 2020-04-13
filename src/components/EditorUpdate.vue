@@ -137,7 +137,8 @@
         this.editor.customConfig.uploadImgMaxLength = 5
         //自定义header
         this.editor.customConfig.uploadImgHeaders = {
-          'Accept': 'text/x-json'
+          'Accept': 'text/x-json',
+          'Authorization': "bearer " + sessionStorage.getItem('userToken')
         }
         let that=this
         //自定义图片上传监听函数
